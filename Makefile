@@ -1,4 +1,4 @@
-OBJS = source.cpp Shader.cpp
+OBJS = source.cpp Shader.cpp src/GraphicsDevice.cpp
 
 CC = g++
 

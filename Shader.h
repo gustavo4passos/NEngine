@@ -13,11 +13,12 @@ public:
 
   void use();
 
-  void setFloat(const char* uniformName, GLfloat value);
-  void setBool(const char* uniformName, GLboolean value);
-  void setVec2(const char* uniformName, GLfloat* array);
-  void setVec3(const char* uniformName, GLfloat* array);
-  void setVec4(const char* uniformName, GLfloat* array);
+  void setFloat(const char* uniformName, GLfloat value) const;
+  void setBool(const char* uniformName, GLboolean value) const;
+  void setVec2(const char* uniformName, GLfloat* array) const;
+  void setVec3(const char* uniformName, GLfloat* array) const;
+  void setVec4(const char* uniformName, GLfloat* array) const;
+  void setMat4(const char* uniformName, GLfloat* matrix) const;
 
 
 private:
