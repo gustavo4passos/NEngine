@@ -4,9 +4,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-
-SDL_Window* window;
-SDL_GLContext context;
+#include "src/inputhandler.h"
 
 int main(int argc, char** args)
 {
@@ -89,25 +87,9 @@ int main(int argc, char** args)
   bool running = true;
   while(running)
   {
-    SDL_Event e;
-    while(SDL_PollEvent(&e) != 0)
-    {
-      if(e.type == SDL_QUIT)
-      {
-        running = false;
-      }
-      if(e.type == SDL_KEYUP)
-      {
-        if(e.key.keysym.sym == SDLK_ESCAPE)
-        {
-          running = false;
-        }
-        if(e.key.keysym.sym == SDLK_F5)
-        {
-          graphicsDevice.toggleFullscreen();
-        }
-      }
-    }
+    InputHandler::instance()->update();
+    if(InputHandler::instance()->keyDown(SDL_SCANCODE_ESCAPE)) running = false;
+    if(InputHandler::instance()->closedWindow()) running = false;
 
     glm::mat4 view = glm::lookAt(
     glm::vec3(1.2f, 1.2f, 1.2f),
@@ -130,8 +112,7 @@ int main(int argc, char** args)
     graphicsDevice.swap();
   }
 
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+  graphicsDevice.close();
 
   return 0;
 }

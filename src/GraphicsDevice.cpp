@@ -82,3 +82,35 @@ void GraphicsDevice::toggleFullscreen()
     SDL_SetWindowFullscreen(_window, 0);
   }
 }
+
+void GraphicsDevice::toggleVsync()
+{
+  if(_vsync)
+  {
+    if(SDL_GL_SetSwapInterval(0) < 0)
+    {
+      printf("SDL ERROR: Unable to disable vsync. Error: %s\n", SDL_GetError());
+    }
+    else
+    {
+        _vsync = false;
+    }
+  }
+  else
+  {
+    if(SDL_GL_SetSwapInterval(1) < 0)
+    {
+      printf("SDL ERROR: Unable to enable vsync. Error: %s\n", SDL_GetError());
+    }
+    else
+    {
+      _vsync = true;
+    }
+  }
+}
+
+void GraphicsDevice::close()
+{
+  SDL_DestroyWindow(_window);
+  SDL_Quit();
+}
