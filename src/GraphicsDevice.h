@@ -15,12 +15,14 @@ public:
   SDL_Window* window() { return _window; }
   void clear();
   void swap();
+  void close();
 
   // Getters
   unsigned int windowWidth()  const { return _windowWidth; }
   unsigned int windowHeight() const { return _windowHeight; }
 
   void toggleFullscreen();
+  void toggleVsync();
 
 private:
   // Window and OpenGL context
