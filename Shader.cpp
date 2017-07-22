@@ -54,4 +54,21 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
   // Delete shaders because they are already in the shader program
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
+
+
+    GLenum error = glGetError();
+    if(error != GL_NO_ERROR)
+    {
+      printf("GL ERROR: Error during shader creation. %s\n", gluErrorString(error));
+    }
+}
+
+void Shader::use()
+{
+  glUseProgram(_shaderID);
+}
+
+void Shader::setMat4(const char* uniformName, GLfloat* matrix) const
+{
+  glUniformMatrix4fv(glGetUniformLocation(_shaderID, uniformName), 1, GL_FALSE, matrix);
 }
