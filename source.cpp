@@ -8,7 +8,7 @@
 
 int main(int argc, char** args)
 {
-  int cas;
+  int cass;
   GraphicsDevice graphicsDevice("NEngine", 1366, 768, false, true);
 
   Shader test("../shaders/vs.vs", "../shaders/fs.fs");
