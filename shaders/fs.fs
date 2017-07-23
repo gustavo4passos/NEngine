@@ -11,7 +11,6 @@ vec3 lightColor = vec3(1.0, 1.0, 1.0);
 
 void main()
 {
-<<<<<<< HEAD
   float ambientStrength = 0.3;
   vec3 ambient = ambientStrength * lightColor;
 
@@ -27,8 +26,4 @@ void main()
   {
     outColor = vec4(1.0, 1.0, 1.0, 1.0);
   }
-=======
-  vec4 mycolor = texture(sampler, TexCoord);
-  outColor = mix(mycolor, (vec4(fsColor, 1.0) * vec4(0.5, 0.5, 0.0, 1.0)), 0.2);
->>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
 }

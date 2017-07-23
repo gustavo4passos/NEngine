@@ -18,9 +18,6 @@ void main()
   Normal = normal;
   fsColor = color;
   TexCoord = texcoord;
-<<<<<<< HEAD
   fragPos = vec3(rotate * vec4(position, 1.0));
-=======
->>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
   gl_Position =  proj * view * rotate * vec4(position, 1.0);
 }
