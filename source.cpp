@@ -13,9 +13,13 @@
 
 int main(int argc, char** args)
 {
+<<<<<<< HEAD
   srand(time(NULL));
 
   GraphicsDevice graphicsDevice("NEngine", 1366, 768, 4, 2, false, true);
+=======
+  GraphicsDevice graphicsDevice("NEngine", 1366, 768, false, true);
+>>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
 
   Shader test("../shaders/vs.vs", "../shaders/fs.fs");
 
@@ -80,7 +84,11 @@ int main(int argc, char** args)
 
   SDL_Surface* surf = SDL_LoadBMP("../resources/sprites/img.bmp");
   printf("Texture x and w %i and %i\n", surf->w, surf->h);
+<<<<<<< HEAD
   Texture textureTest = Texture("RGB", "RGB", surf->w, surf->h, surf->pixels, true);
+=======
+  Texture textureTest = Texture("RGB", "RGB", surf->w, surf->h, surf->pixels);
+>>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
 
   SDL_FreeSurface(surf);
 
@@ -94,11 +102,16 @@ int main(int argc, char** args)
   glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "color"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 11, (void*)(sizeof(GLfloat) * 5));
   glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "color"));
 
+<<<<<<< HEAD
   glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "texcoord"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 11, (void*)(sizeof(GLfloat) * 6));
   glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "texcoord"));
 
   glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "normal"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 11, (void*)(sizeof(GLfloat) * 8));
   glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "normal"));
+=======
+  glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "texcoord"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 8, (void*)(sizeof(GLfloat) * 6));
+  glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "texcoord"));
+>>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
 
   int major, minor;
   glGetIntegerv(GL_MAJOR_VERSION, &major);
@@ -112,7 +125,10 @@ int main(int argc, char** args)
 
   float followmouse = 0;
   float timedelta = 0, lasttick = 0;
+<<<<<<< HEAD
   float count = 1;
+=======
+>>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
 
   bool running = true;
   while(running)
@@ -143,16 +159,21 @@ int main(int argc, char** args)
     followmouse = followmouse * (1 - timedelta *  transitiontime) + x * (timedelta * transitiontime);
     timedelta = (SDL_GetTicks() * 1.f) - lasttick;
     lasttick = SDL_GetTicks();
+<<<<<<< HEAD
     glm::mat4 rotateMat = glm::rotate(x * 0.01f, fuck);
 
     glm::vec3 lightPos = glm::vec3(sin(SDL_GetTicks() / 1000.f), cos(SDL_GetTicks() / 1000.f), sin(SDL_GetTicks() / 1000.f) * cos(SDL_GetTicks() / 1000.f));
     glUniform3fv(glGetUniformLocation(test.shaderID(), "lightPos"), 1,  glm::value_ptr(lightPos));
+=======
+    glm::mat4 rotateMat = glm::rotate(x * 0.001f, fuck);
+>>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
 
     test.setMat4("rotate", glm::value_ptr(rotateMat));
     graphicsDevice.clear();
     // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
     glBindTexture(GL_TEXTURE_2D, textureTest.id());
     GraphicEngine::instance()->draw(vao, &test, 36);
+<<<<<<< HEAD
 
     for(int i = 0; i < 100; i++)
     {
@@ -163,6 +184,9 @@ int main(int argc, char** args)
       GraphicEngine::instance()->draw(vao, &test, 36);
       //glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
+=======
+    //glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+>>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
     graphicsDevice.swap();
   }
 

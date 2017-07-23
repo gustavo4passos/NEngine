@@ -57,9 +57,12 @@ Texture::Texture(std::string internalFormatName, std::string formatName,
 
   // Load pixels on video memory
   glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
+<<<<<<< HEAD
 
   //Unbind texture from context after loading
   glBindTexture(GL_TEXTURE_2D, 0);
+=======
+>>>>>>> 8c0cb95fe648bb3c7abdb41dd0763fadbf44ce2b
 
   //Check for errors
   GLenum error = glGetError();
