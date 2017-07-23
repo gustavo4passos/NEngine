@@ -10,7 +10,7 @@
 
 int main(int argc, char** args)
 {
-  GraphicsDevice graphicsDevice("NEngine", 1366, 768, 4, 2, false, false);
+  GraphicsDevice graphicsDevice("NEngine", 1366, 768, false, true);
 
   Shader test("../shaders/vs.vs", "../shaders/fs.fs");
 
@@ -110,11 +110,7 @@ int main(int argc, char** args)
   {
     InputHandler::instance()->update();
     if(InputHandler::instance()->keyUp(SDL_SCANCODE_ESCAPE)) running = false;
-    if(InputHandler::instance()->keyUp(SDL_SCANCODE_F5))
-    {
-      test = Shader("../shaders/vs.vs", "../shaders/fs.fs");
-      test.use();
-    }
+    if(InputHandler::instance()->keyUp(SDL_SCANCODE_F5)) graphicsDevice.toggleFullscreen();
     if(InputHandler::instance()->closedWindow()) running = false;
 
     int x, y;
