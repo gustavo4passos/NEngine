@@ -1,6 +1,6 @@
 #include "GraphicsDevice.h"
 
-GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, bool fullscreen, bool vsync)
+GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync)
  : _windowWidth(windowWidth), _windowHeight(windowHeight), _isFullscreen(fullscreen), _vsync(vsync)
 {
   //Check if SDL was initialized correctly (SDL_Init returns a negative value in case it was not able to initialize SDL)
@@ -14,8 +14,8 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
     printf("SDL successfully initialized.\n");
     #endif
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glMajorVersion);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glMinorVersion);
 
     //Fullscreen flag
     Uint32 flags = (fullscreen) ? SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL : SDL_WINDOW_OPENGL;

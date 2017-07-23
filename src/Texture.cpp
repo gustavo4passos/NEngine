@@ -27,6 +27,7 @@ Texture::Texture(std::string internalFormatName, std::string formatName,
 
   glGenTextures(1, &_id);
   glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _id);
 
   // Set linear filtering
   if(linearFiltering)
@@ -56,4 +57,14 @@ Texture::Texture(std::string internalFormatName, std::string formatName,
 
   // Load pixels on video memory
   glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
+
+  //Unbind texture from context after loading
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  //Check for errors
+  GLenum error = glGetError();
+  if(error != GL_NO_ERROR)
+  {
+    printf("OPENGL ERROR: Error while sending texture to video memory. %s\n", gluErrorString(error));
+  }
 }

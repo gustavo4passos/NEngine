@@ -11,7 +11,7 @@
 class GraphicsDevice
 {
 public:
-  GraphicsDevice(const char* title, int windowWidth, int windowHeight, bool fullscreen = false, bool vsync = false);
+  GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen = false, bool vsync = false);
   SDL_Window* window() { return _window; }
   void clear();
   void swap();

@@ -3,6 +3,8 @@
 #include "Shader.h"
 #include "../util/FileReader.h"
 
+// Shader constructor
+// It loads a file from a string, compile, check for errors, and return a Shader object containing a vertex shader and fragment shader linked into a shader program
 Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
 {
   // Read the shader files to strings
@@ -55,7 +57,6 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
-
     GLenum error = glGetError();
     if(error != GL_NO_ERROR)
     {
@@ -63,11 +64,13 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
     }
 }
 
+// Set as the active shader
 void Shader::use()
 {
   glUseProgram(_shaderID);
 }
 
+// Loads a 4x4 matris into the shader
 void Shader::setMat4(const char* uniformName, GLfloat* matrix) const
 {
   glUniformMatrix4fv(glGetUniformLocation(_shaderID, uniformName), 1, GL_FALSE, matrix);
