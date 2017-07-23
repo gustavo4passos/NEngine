@@ -1,7 +1,7 @@
 #include <string>
 #include <stdio.h>
 #include "Shader.h"
-#include "util/FileReader.h"
+#include "../util/FileReader.h"
 
 Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
 {

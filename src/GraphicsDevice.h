@@ -1,9 +1,9 @@
 #ifndef __GRAPHICSDEVICE_H__
 #define __GRAPHICSDEVICE_H__
 
+#define GLEW_STATIC
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
