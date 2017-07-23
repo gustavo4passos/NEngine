@@ -1,5 +1,5 @@
-#ifndef __INPUTHANDLER_H__
-#define __INPUTHANDLER_H__
+#ifndef INPUTHANDLER_H
+#define INPUTHANDLER_H
 
 #include <stdio.h>
 #include <SDL2/SDl.h>
@@ -32,6 +32,8 @@ private:
 
   // Current map of the keyboard state
   const Uint8* _keyboardState;
+  bool _keyUp[100];
+
 
   // Check if the window clicked on the close window button
   bool _closedWindow;

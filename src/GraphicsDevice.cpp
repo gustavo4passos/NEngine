@@ -10,8 +10,9 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
   }
   else
   {
+    #ifdef LOG
     printf("SDL successfully initialized.\n");
-
+    #endif
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
@@ -30,10 +31,12 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
 
       if(_glContext == NULL)
       {
-        printf("SDL ERROR: Unable to create OpenGL context from SDL. Error: %s", SDL_GetError());
+        printf("SDL ERROR: Unable to create OpenGL context from SDL. Error: %s\n", SDL_GetError());
       }
       else
       {
+        printf("OpenGL context successfully created.\n");
+
         glewExperimental = GL_TRUE;
         GLenum glewErr = glewInit();
 
@@ -43,6 +46,8 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
         }
         else
         {
+          printf("Glew successfully initialized.\n");
+
           glClearColor(0.f, 0.f, 0.0f, 1.f);
 
           if(vsync)
