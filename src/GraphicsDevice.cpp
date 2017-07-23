@@ -1,6 +1,6 @@
 #include "GraphicsDevice.h"
 
-GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, bool fullscreen, bool vsync)
+GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync)
  : _windowWidth(windowWidth), _windowHeight(windowHeight), _isFullscreen(fullscreen), _vsync(vsync)
 {
   //Check if SDL was initialized correctly (SDL_Init returns a negative value in case it was not able to initialize SDL)
@@ -10,11 +10,12 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
   }
   else
   {
+    #ifdef LOG
     printf("SDL successfully initialized.\n");
-
+    #endif
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glMajorVersion);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glMinorVersion);
 
     //Fullscreen flag
     Uint32 flags = (fullscreen) ? SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL : SDL_WINDOW_OPENGL;
@@ -30,10 +31,12 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
 
       if(_glContext == NULL)
       {
-        printf("SDL ERROR: Unable to create OpenGL context from SDL. Error: %s", SDL_GetError());
+        printf("SDL ERROR: Unable to create OpenGL context from SDL. Error: %s\n", SDL_GetError());
       }
       else
       {
+        printf("OpenGL context successfully created.\n");
+
         glewExperimental = GL_TRUE;
         GLenum glewErr = glewInit();
 
@@ -43,6 +46,8 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
         }
         else
         {
+          printf("Glew successfully initialized.\n");
+
           glClearColor(0.f, 0.f, 0.0f, 1.f);
 
           if(vsync)

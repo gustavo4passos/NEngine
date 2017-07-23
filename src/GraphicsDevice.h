@@ -1,9 +1,9 @@
 #ifndef __GRAPHICSDEVICE_H__
 #define __GRAPHICSDEVICE_H__
 
+#define GLEW_STATIC
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -11,7 +11,7 @@
 class GraphicsDevice
 {
 public:
-  GraphicsDevice(const char* title, int windowWidth, int windowHeight, bool fullscreen = false, bool vsync = false);
+  GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen = false, bool vsync = false);
   SDL_Window* window() { return _window; }
   void clear();
   void swap();
