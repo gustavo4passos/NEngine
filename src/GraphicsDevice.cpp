@@ -114,6 +114,11 @@ int GraphicsDevice::checkForErrors()
   return wereErrorsFound;
 }
 
+void GraphicsDevice::setWindowSize(unsigned int windowWidth, unsigned int windowHeight)
+{
+  SDL_SetWindowSize(_window, windowWidth, windowHeight);
+}
+
 void GraphicsDevice::toggleFullscreen()
 {
   if(!_isFullscreen)

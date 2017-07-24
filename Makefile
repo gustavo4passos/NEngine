@@ -1,4 +1,4 @@
-OBJS = source.cpp src/Shader.cpp src/GraphicsDevice.cpp src/InputHandler.cpp src/GraphicEngine.cpp src/Texture.cpp src/AudioDevice.cpp
+OBJS = source.cpp src/Shader.cpp src/GraphicsDevice.cpp src/InputHandler.cpp src/GraphicEngine.cpp src/Texture.cpp src/AudioDevice.cpp src/AudioEngine.cpp
 
 CC = g++
 

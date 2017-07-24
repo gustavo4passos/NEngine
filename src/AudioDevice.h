@@ -9,9 +9,14 @@ class AudioDevice
 public:
   AudioDevice();
 
+  bool initializationStatus() const { return _initializationStatus; }
+
 private:
   ALCdevice* _audioDevice;
   ALCcontext* _audioContext;
+
+  // Stores the initialization status (true = successfully initialized, false otherwise)
+  bool _initializationStatus;
 };
 
 #endif

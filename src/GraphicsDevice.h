@@ -9,6 +9,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+// Initializes SDL, Creates an OpenGL context, a window an stores a reference to both
+// Also responsible for checking errors, a managing the window and context status
 class GraphicsDevice
 {
 public:
@@ -33,11 +35,12 @@ public:
   unsigned int windowWidth()  const { return _windowWidth; }
   unsigned int windowHeight() const { return _windowHeight; }
 
+  void setWindowSize(unsigned int windowWidth, unsigned int windowHeight);
   void toggleFullscreen();
   void toggleVsync();
 
 private:
-    //Stores the initialization status
+    // Stores the initialization status (true = successfully initialized, false otherwise)
     bool _initializationStatus;
 
   // Window and OpenGL context

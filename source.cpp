@@ -4,6 +4,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "src/AudioEngine.h"
 #include "src/InputHandler.h"
 #include "src/GraphicEngine.h"
 #include "src/Shader.h"
@@ -11,6 +12,7 @@
 #include "src/AudioDevice.h"
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
 const int WINDOW_WIDTH = 1366;
 const int WINDOW_HEIGHT = 768;
@@ -20,10 +22,14 @@ int main(int argc, char** args)
   srand(time(NULL));
 
   AudioDevice audioDevice = AudioDevice();
+  if(audioDevice.initializationStatus())
+  {
+    AudioEngine::instance();
+  }
   GraphicsDevice graphicsDevice("NEngine", WINDOW_WIDTH, WINDOW_HEIGHT, 3, 2, false, true);
   if(graphicsDevice.initializationStatus())
     {
-      graphicsDevice.clearColor(0.5f, 0.5f, 0.5f, 1.f);
+      graphicsDevice.clearColor(0.1f, 0.1f, 0.1f, 1.f);
       Shader test("../shaders/vs.vs", "../shaders/fs.fs");
 
       GLuint vao, vbo, ebo;
@@ -85,34 +91,10 @@ int main(int argc, char** args)
         1, 2, 3
       };
 
-      // Open audio file
-      ALuint source;
-      alGenSources(1, &source);
-      alSourcef(source, AL_PITCH, 1.f);
-      alSourcef(source, AL_GAIN, 1.f);
-      alSource3f(source, AL_VELOCITY, 0.f, 0.f, 0.f);
-      alSource3f(source, AL_POSITION, 0.f, 0.f, 0.f);
-      alSourcei(source, AL_LOOPING, AL_TRUE);
-
-      ALuint buffer;
-      alGenBuffers(1, &buffer);
-
-      SDL_AudioSpec wav_spec;
-      Uint32 wav_length;
-      Uint8 *wav_buffer;
-      if(SDL_LoadWAV("../resources/audio/background/northern_wind.wav", &wav_spec, &wav_buffer, &wav_length) == NULL)
-      {
-        printf("SDL ERROR: Unable to opnel wav. Error: %s\n", SDL_GetError());
-      }
-      alBufferData(buffer, AL_FORMAT_STEREO16, wav_buffer, wav_length, wav_spec.freq);
-      ALenum error = alGetError();
-      if(error != AL_NO_ERROR)
-      {
-        printf("AL ERROR: Unable to load wav to memory.\n");
-      }
-      alSourcei(source, AL_BUFFER, buffer);
-      alSourcePlay(source);
-      SDL_FreeWAV(wav_buffer);
+      int source = AudioEngine::instance()->createSource();
+      printf("Source: %i\n", source);
+      int northernWind = AudioEngine::instance()->loadWAV("../resources/audio/background/northern_wind.wav", true, 16);
+      AudioEngine::instance()->play(source, northernWind);
 
       SDL_Surface* surf = IMG_Load("../resources/sprites/meteorite.png");
       if(surf == NULL){ printf("SDL_IMage error: %s\n", IMG_GetError());}
@@ -186,6 +168,7 @@ int main(int argc, char** args)
         graphicsDevice.swap();
       }
 
+      AudioEngine::instance()->clean();
       graphicsDevice.checkForErrors();
       graphicsDevice.close();
     }
