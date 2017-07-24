@@ -8,165 +8,186 @@
 #include "src/GraphicEngine.h"
 #include "src/Shader.h"
 #include "src/Texture.h"
+#include "src/AudioDevice.h"
 #include <stdlib.h>
 #include <time.h>
+
+const int WINDOW_WIDTH = 1366;
+const int WINDOW_HEIGHT = 768;
 
 int main(int argc, char** args)
 {
   srand(time(NULL));
 
-  GraphicsDevice graphicsDevice("NEngine", 1366, 768, 4, 2, false, true);
-
-  Shader test("../shaders/vs.vs", "../shaders/fs.fs");
-
-  GLuint vao, vbo, ebo;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
-
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glGenBuffers(1, &ebo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-
-  GLfloat vertices[] =
-  {
-    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
-    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
-
-    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-
-    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
-
-    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
-     0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,  0.0f,
-    -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
-
-    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-    -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-  };
-
-  GLuint elements[] =
-  {
-    1, 2, 3
-  };
-
-  SDL_Surface* surf = SDL_LoadBMP("../resources/sprites/img.bmp");
-  printf("Texture x and w %i and %i\n", surf->w, surf->h);
-  Texture textureTest = Texture("RGB", "RGB", surf->w, surf->h, surf->pixels);
-
-  SDL_FreeSurface(surf);
-
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-  test.use();
-
-  glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "position"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 11, 0);
-  glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "position"));
-
-  glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "color"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 11, (void*)(sizeof(GLfloat) * 5));
-  glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "color"));
-
-  glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "texcoord"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 11, (void*)(sizeof(GLfloat) * 6));
-  glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "texcoord"));
-
-  glVertexAttribPointer(glGetAttribLocation(test.shaderID(), "normal"), 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 11, (void*)(sizeof(GLfloat) * 8));
-  glEnableVertexAttribArray(glGetAttribLocation(test.shaderID(), "normal"));
-
-  int major, minor;
-  glGetIntegerv(GL_MAJOR_VERSION, &major);
-  glGetIntegerv(GL_MINOR_VERSION, &minor);
-  printf("OpenGL version: %i.%i\n", major, minor);
-
-  glVertexAttribPointer(5, 2,  GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 8, (void*)(sizeof(GLfloat) * 6));
-  glEnableVertexAttribArray(5);
-  GLenum error = glGetError();
-  if(error != GL_NO_ERROR) printf("%s", gluErrorString(error));
-
-  float followmouse = 0;
-  float timedelta = 0, lasttick = 0;
-  float count = 1;
-
-  bool running = true;
-  while(running)
-  {
-    InputHandler::instance()->update();
-    if(InputHandler::instance()->keyUp(SDL_SCANCODE_ESCAPE)) running = false;
-    if(InputHandler::instance()->keyUp(SDL_SCANCODE_F5)) graphicsDevice.toggleFullscreen();
-    if(InputHandler::instance()->closedWindow()) running = false;
-
-    int x, y;
-    SDL_GetMouseState(&x, &y);
-
-    glm::mat4 view = glm::lookAt(
-    glm::vec3(1.2f, 2.2f, 1.2f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(0.0f, 0.0f, 1.0f)
-    );
-
-    glEnable(GL_DEPTH_TEST);
-    glm::mat4 proj = glm::perspective(glm::radians(y * 0.5f), 1366 / 768.f, 1.0f, 10.0f);
-
-    test.setMat4("proj", glm::value_ptr(proj));
-    test.setMat4("view", glm::value_ptr(view));
-    float angle = SDL_GetTicks() / 1000.f;
-    glm::vec3 fuck = glm::vec3(0.f, 0.f, 1.f);
-
-    float transitiontime = 0.005f;
-    followmouse = followmouse * (1 - timedelta *  transitiontime) + x * (timedelta * transitiontime);
-    timedelta = (SDL_GetTicks() * 1.f) - lasttick;
-    lasttick = SDL_GetTicks();
-    glm::mat4 rotateMat = glm::rotate(x * 0.01f, fuck);
-
-    glm::vec3 lightPos = glm::vec3(sin(SDL_GetTicks() / 1000.f), cos(SDL_GetTicks() / 1000.f), sin(SDL_GetTicks() / 1000.f) * cos(SDL_GetTicks() / 1000.f));
-    glUniform3fv(glGetUniformLocation(test.shaderID(), "lightPos"), 1,  glm::value_ptr(lightPos));
-
-    test.setMat4("rotate", glm::value_ptr(rotateMat));
-    graphicsDevice.clear();
-    // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-    glBindTexture(GL_TEXTURE_2D, textureTest.id());
-    GraphicEngine::instance()->draw(vao, &test, 36);
-
-    for(int i = 0; i < 100; i++)
+  AudioDevice audioDevice = AudioDevice();
+  GraphicsDevice graphicsDevice("NEngine", WINDOW_WIDTH, WINDOW_HEIGHT, 3, 2, false, true);
+  if(graphicsDevice.initializationStatus())
     {
-      count += sin(i) * 0.01f;
-      glm::mat4 translatem = glm::translate(rotateMat, glm::vec3(sin((SDL_GetTicks() / 1000.f) * count ), cos((SDL_GetTicks() / 1000.f) * count ), tan((SDL_GetTicks() / 1000.f) * count )));
-      glm::mat4 scale = glm::scale(translatem, glm::vec3(0.5f, 0.5f, 0.5f));
-      test.setMat4("rotate", glm::value_ptr(scale));
-      GraphicEngine::instance()->draw(vao, &test, 36);
-      //glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+      graphicsDevice.clearColor(0.5f, 0.5f, 0.5f, 1.f);
+      Shader test("../shaders/vs.vs", "../shaders/fs.fs");
+
+      GLuint vao, vbo, ebo;
+      glGenVertexArrays(1, &vao);
+      glBindVertexArray(vao);
+
+      glGenBuffers(1, &vbo);
+      glBindBuffer(GL_ARRAY_BUFFER, vbo);
+      glGenBuffers(1, &ebo);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
+      GLfloat vertices[] =
+      {
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+      };
+
+      GLuint elements[] =
+      {
+        1, 2, 3
+      };
+
+      // Open audio file
+      ALuint source;
+      alGenSources(1, &source);
+      alSourcef(source, AL_PITCH, 1.f);
+      alSourcef(source, AL_GAIN, 1.f);
+      alSource3f(source, AL_VELOCITY, 0.f, 0.f, 0.f);
+      alSource3f(source, AL_POSITION, 0.f, 0.f, 0.f);
+      alSourcei(source, AL_LOOPING, AL_TRUE);
+
+      ALuint buffer;
+      alGenBuffers(1, &buffer);
+
+      SDL_AudioSpec wav_spec;
+      Uint32 wav_length;
+      Uint8 *wav_buffer;
+      if(SDL_LoadWAV("../resources/audio/background/northern_wind.wav", &wav_spec, &wav_buffer, &wav_length) == NULL)
+      {
+        printf("SDL ERROR: Unable to opnel wav. Error: %s\n", SDL_GetError());
+      }
+      alBufferData(buffer, AL_FORMAT_STEREO16, wav_buffer, wav_length, wav_spec.freq);
+      ALenum error = alGetError();
+      if(error != AL_NO_ERROR)
+      {
+        printf("AL ERROR: Unable to load wav to memory.\n");
+      }
+      alSourcei(source, AL_BUFFER, buffer);
+      alSourcePlay(source);
+      SDL_FreeWAV(wav_buffer);
+
+      SDL_Surface* surf = IMG_Load("../resources/sprites/meteorite.png");
+      if(surf == NULL){ printf("SDL_IMage error: %s\n", IMG_GetError());}
+      Texture textureTest = Texture("RGBA", "RGBA", surf->w, surf->h, surf->pixels, true);
+
+      SDL_FreeSurface(surf);
+
+      glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
+      test.use();
+      test.vertexAttribPointer("position", 3, 11, 0);
+      test.vertexAttribPointer("color", 3, 11, 5);
+      test.vertexAttribPointer("texcoord", 2, 11, 6);
+      test.vertexAttribPointer("normal", 3, 11, 8);
+
+      int major, minor;
+      glGetIntegerv(GL_MAJOR_VERSION, &major);
+      glGetIntegerv(GL_MINOR_VERSION, &minor);
+      printf("OpenGL version: %i.%i\n", major, minor);
+
+      graphicsDevice.checkForErrors();
+
+      float count = 1;
+
+      bool running = true;
+      while(running)
+      {
+        InputHandler::instance()->update();
+        if(InputHandler::instance()->keyUp(SDL_SCANCODE_ESCAPE)) running = false;
+        if(InputHandler::instance()->keyUp(SDL_SCANCODE_F5)) graphicsDevice.toggleFullscreen();
+        if(InputHandler::instance()->closedWindow()) running = false;
+
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+
+        glm::mat4 view = glm::lookAt(
+        glm::vec3(1.2f, 2.2f, 1.2f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f)
+        );
+
+        glEnable(GL_DEPTH_TEST);
+        glm::mat4 proj = glm::perspective(glm::radians(45.f), float(WINDOW_WIDTH) / WINDOW_HEIGHT, 1.0f, 10.0f);
+
+        test.setMat4("proj", glm::value_ptr(proj));
+        test.setMat4("view", glm::value_ptr(view));
+        float angle = SDL_GetTicks() / 1000.f;
+        glm::vec3 fuck = glm::vec3(0.f, 0.f, 1.f);
+
+        glm::mat4 rotateMat = glm::rotate(glm::radians(SDL_GetTicks() * 0.05f), fuck);
+
+        glm::vec3 lightPos = glm::vec3(sin(SDL_GetTicks() / 1000.f), cos(SDL_GetTicks() / 1000.f), sin(SDL_GetTicks() / 1000.f) * cos(SDL_GetTicks() / 1000.f));
+        glUniform3fv(glGetUniformLocation(test.id(), "lightPos"), 1,  glm::value_ptr(lightPos));
+
+        test.setMat4("rotate", glm::value_ptr(rotateMat));
+        graphicsDevice.clear();
+        // glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        glBindTexture(GL_TEXTURE_2D, textureTest.id());
+        GraphicEngine::instance()->draw(vao, &test, 0, 36);
+
+        for(int i = 0; i < 100; i++)
+        {
+          count += sin(i) * 0.01f;
+          glm::mat4 translatem = glm::translate(rotateMat, glm::vec3(sin((SDL_GetTicks() / 1000.f) * count ), cos((SDL_GetTicks() / 1000.f) * count ), tan((SDL_GetTicks() / 1000.f) * count )));
+          glm::mat4 scale = glm::scale(translatem, glm::vec3(0.5f, 0.5f, 0.5f));
+          test.setMat4("rotate", glm::value_ptr(scale));
+          GraphicEngine::instance()->draw(vao, &test, 0, 36);
+          //glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
+        graphicsDevice.swap();
+      }
+
+      graphicsDevice.checkForErrors();
+      graphicsDevice.close();
     }
-    graphicsDevice.swap();
-  }
-
-  graphicsDevice.close();
-
   return 0;
 }

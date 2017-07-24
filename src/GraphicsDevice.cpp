@@ -24,6 +24,7 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
     if(_window == NULL)
     {
       printf("SDL ERROR: Unable to create window. Error:%s\n", SDL_GetError());
+      _initializationStatus = false;
     }
     else
     {
@@ -32,6 +33,7 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
       if(_glContext == NULL)
       {
         printf("SDL ERROR: Unable to create OpenGL context from SDL. Error: %s\n", SDL_GetError());
+        _initializationStatus = false;
       }
       else
       {
@@ -43,6 +45,7 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
         if(glewErr != GLEW_NO_ERROR)
         {
           printf("SDL ERROR: Unable to initialize Glew. Error: %s\n", glewGetErrorString(glewErr));
+          _initializationStatus = false;
         }
         else
         {
@@ -50,18 +53,37 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
 
           glClearColor(0.f, 0.f, 0.0f, 1.f);
 
-          if(vsync)
+          // Initialize SDL Image (PNG loader, and other formats that we won't need
+          // We wan't to initialize only the PNG loader
+          int flags = IMG_INIT_PNG | IMG_INIT_JPG;
+          int imgInitStatus = IMG_Init(flags);
+          if((flags & imgInitStatus) != flags)
           {
-            if(SDL_GL_SetSwapInterval(1) < 0)
+            printf("SDL IMAGE ERROR: Unable to initialize SDL_Image correctly. Error: %s\n", IMG_GetError());
+            _initializationStatus = false;
+          }
+          else
+          {
+            printf("SDL_Image successfully initialized.\n");
+            _initializationStatus = true;
+
+            if(vsync)
             {
-              printf("SDL ERROR: Unable to enable Vsync. Error: %s\n", SDL_GetError());
+              if(SDL_GL_SetSwapInterval(1) < 0)
+              {
+                printf("SDL ERROR: Unable to enable Vsync. Error: %s\n", SDL_GetError());
+              }
             }
           }
-
         }
       }
     }
   }
+}
+
+void GraphicsDevice::clearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+{
+  glClearColor(red, green, blue, alpha);
 }
 
 void GraphicsDevice::clear()
@@ -72,6 +94,24 @@ void GraphicsDevice::clear()
 void GraphicsDevice::swap()
 {
   SDL_GL_SwapWindow(_window);
+}
+
+int GraphicsDevice::checkForErrors()
+{
+  // 0 = no errors found. -1 otherwise.
+  int wereErrorsFound = 0;
+  // Poll one event from the error queue
+  GLenum error = glGetError();
+
+  while(error != GL_NO_ERROR)
+  {
+    wereErrorsFound = -1;
+    printf("OPENGL ERROR: %s\n", gluErrorString(error));
+    // Checks if there are still errors in the queue
+    error = glGetError();
+  }
+
+  return wereErrorsFound;
 }
 
 void GraphicsDevice::toggleFullscreen()
@@ -117,5 +157,6 @@ void GraphicsDevice::toggleVsync()
 void GraphicsDevice::close()
 {
   SDL_DestroyWindow(_window);
+  IMG_Quit();
   SDL_Quit();
 }

@@ -24,7 +24,6 @@ public:
   bool keyDown(SDL_Scancode key) const;
   bool keyUp(SDL_Scancode key) const;
 
-
 private:
   InputHandler();
   ~InputHandler();

@@ -1,4 +1,4 @@
-#version 400 core
+#version 150 core
 
 in vec3 fsColor;
 out vec4 outColor;
@@ -22,8 +22,4 @@ void main()
   vec3 result = (ambient + diffuse);
   outColor = mix(mycolor, (vec4(fsColor, 1.0) * vec4(0.5, 0.5, 0.0, 1.0)), 0.2) * vec4(result, 1.0);
 
-  if(gl_FragCoord.x == lightPos.x)
-  {
-    outColor = vec4(1.0, 1.0, 1.0, 1.0);
-  }
 }
