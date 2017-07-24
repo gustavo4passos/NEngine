@@ -9,23 +9,23 @@ GraphicEngine::GraphicEngine()
   _currentShader = 0;
 }
 
-void GraphicEngine::draw(GLuint vao, Shader* shader, GLuint count)
+void GraphicEngine::draw(GLuint vao, Shader* shader, GLuint first, GLuint count)
 {
-  if(shader->shaderID() != _currentShader)
+  if(shader->id() != _currentShader)
   {
-    glUseProgram(shader->shaderID());
-    _currentShader = shader->shaderID();
+    glUseProgram(shader->id());
+    _currentShader = shader->id();
   }
   glBindVertexArray(vao);
-  glDrawArrays(GL_TRIANGLES, 0, count);
+  glDrawArrays(GL_TRIANGLES, first, count);
 }
 
 void GraphicEngine::drawElements(GLuint vao, const Shader* shader, int count)
 {
-  if(shader->shaderID() != _currentShader)
+  if(shader->id() != _currentShader)
   {
-    glUseProgram(shader->shaderID());
-    _currentShader = shader->shaderID();
+    glUseProgram(shader->id());
+    _currentShader = shader->id();
   }
   glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL);
 }

@@ -17,7 +17,7 @@ public:
     }
     return _instance;
   }
-  void draw(GLuint vao, Shader* shader, GLuint count);
+  void draw(GLuint vao, Shader* shader, GLuint first = 0, GLuint count = 6);
   void drawElements(GLuint vao, const Shader* shader, int count = 4);
 
 private:
@@ -27,7 +27,6 @@ private:
   GraphicEngine();
   void useProgram(Shader shader);
   GLuint _currentShader;
-
 };
 
 #endif

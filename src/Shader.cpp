@@ -48,10 +48,10 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
   }
 
   // Create the shader program object, attach shaders and link program
-  _shaderID = glCreateProgram();
-  glAttachShader(_shaderID, vertexShader);
-  glAttachShader(_shaderID, fragmentShader);
-  glLinkProgram(_shaderID);
+  _id = glCreateProgram();
+  glAttachShader(_id, vertexShader);
+  glAttachShader(_id, fragmentShader);
+  glLinkProgram(_id);
 
   // Delete shaders because they are already in the shader program
   glDeleteShader(vertexShader);
@@ -67,11 +67,25 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
 // Set as the active shader
 void Shader::use()
 {
-  glUseProgram(_shaderID);
+  glUseProgram(_id);
+}
+
+void Shader::vertexAttribPointer(const char* attribName, unsigned int size, unsigned int stride, unsigned int offset)
+{
+  GLint attribLocation = glGetAttribLocation(_id, attribName);
+  if(attribLocation < 0)
+  {
+    printf("OPENGL SHADER ERROR: Unable to find attrib location. Attrib: %s\n", attribName);
+  }
+  else
+  {
+    glVertexAttribPointer(attribLocation, size, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * stride,(GLvoid*)(sizeof(GLfloat) * offset));
+    glEnableVertexAttribArray(attribLocation);
+  }
 }
 
 // Loads a 4x4 matris into the shader
 void Shader::setMat4(const char* uniformName, GLfloat* matrix) const
 {
-  glUniformMatrix4fv(glGetUniformLocation(_shaderID, uniformName), 1, GL_FALSE, matrix);
+  glUniformMatrix4fv(glGetUniformLocation(_id, uniformName), 1, GL_FALSE, matrix);
 }
