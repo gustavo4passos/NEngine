@@ -1,6 +1,8 @@
 #include "AudioEngine.h"
-#include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+
+#include <stdio.h>
 
 // Set the static instance to 0
 AudioEngine* AudioEngine::_instance = 0;
@@ -99,6 +101,14 @@ int AudioEngine::createSource(float gain, float pitch, bool looping, float x, fl
     ALenum looping = (looping) ? AL_TRUE : AL_FALSE;
     alSourcei(source, AL_LOOPING, looping);
 
+    // Check for errors
+    ALenum error = alGetError();
+    if(error != AL_NO_ERROR)
+    {
+      printf("AUDIO ENGINE ERROR: Unable to set up source. Error code: %i\n", error);
+      return -1;
+    }
+
     // Push source back into vector and return position
     _sources.push_back(source);
     int position = _sources.size() - 1;
@@ -117,6 +127,7 @@ void AudioEngine::sourcePosition(int source, float x, float y, float z)
     alSource3f(_sources[source], AL_POSITION, x, y, z);
   }
 }
+
 
 // Clean data
 void AudioEngine::clean()

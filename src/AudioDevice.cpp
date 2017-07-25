@@ -1,6 +1,5 @@
-#include <stdio.h>
 #include "AudioDevice.h"
-
+#include <SDL2/SDL_mixer.h>
 
 AudioDevice::AudioDevice() : _audioDevice(NULL), _audioContext(NULL)
 {
@@ -29,13 +28,26 @@ AudioDevice::AudioDevice() : _audioDevice(NULL), _audioContext(NULL)
     {
 
         printf("OPENAL: Audio device successfully initialized.\n");
-        _initializationStatus = true;
 
         // Setting up the listener position (Default: Center of the screen);
         alListener3f(AL_POSITION, 0.f, 0.f, 1.0);
         alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f);
         ALfloat listenerOrientation[] = { 0.f, 0.f, 1.f, 0.f, 1.f, 0.f};
         alListenerfv(AL_ORIENTATION, listenerOrientation);
+
+        // Load SDL_Mixer for MP3 and Ogg loading
+        int flags = MIX_INIT_MP3 | MIX_INIT_OGG;
+        int succesffullyInitialized = Mix_Init(flags);
+        if(flags != succesffullyInitialized)
+        {
+          printf("AUDIO DEVICE ERROR: SDL_Mixer was not initialized successfully. Error: %s\n", Mix_GetError());
+          _initializationStatus = false;
+        }
+        else
+        {
+          printf("SDL_Mixer succesfully initialized.\n");
+          _initializationStatus = true;
+        }
     }
   }
 }

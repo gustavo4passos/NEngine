@@ -4,8 +4,9 @@
 class GameObject
 {
 public:
-  virtual void update() = 0;
-  virtual void draw(unsigned int gameTime) = 0;
+  ~GameObject() {}
+  virtual void update(unsigned int gameTime) = 0;
+  virtual void draw() = 0;
 };
 
 #endif

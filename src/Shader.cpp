@@ -81,6 +81,14 @@ void Shader::vertexAttribPointer(const char* attribName, unsigned int size, unsi
   {
     glVertexAttribPointer(attribLocation, size, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * stride,(GLvoid*)(sizeof(GLfloat) * offset));
     glEnableVertexAttribArray(attribLocation);
+
+    // Check for errors
+    GLenum error = glGetError();
+    while(error != GL_NO_ERROR)
+    {
+      printf("OPENGL SHADER ERROR: Error while loading vertex attrib data. Attrib: %s. Error: %s\n", attribName, gluErrorString(error));
+      error = glGetError();
+    }
   }
 }
 
