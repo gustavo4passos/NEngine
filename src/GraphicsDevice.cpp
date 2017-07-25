@@ -56,8 +56,8 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
           // Initialize SDL Image (PNG loader, and other formats that we won't need
           // We wan't to initialize only the PNG loader
           int flags = IMG_INIT_PNG | IMG_INIT_JPG;
-          int imgInitStatus = IMG_Init(flags);
-          if((flags & imgInitStatus) != flags)
+          int succesffullyInitialized = IMG_Init(flags);
+          if((flags & succesffullyInitialized) != flags)
           {
             printf("SDL IMAGE ERROR: Unable to initialize SDL_Image correctly. Error: %s\n", IMG_GetError());
             _initializationStatus = false;
@@ -158,6 +158,8 @@ void GraphicsDevice::toggleVsync()
     }
   }
 }
+
+
 
 void GraphicsDevice::close()
 {

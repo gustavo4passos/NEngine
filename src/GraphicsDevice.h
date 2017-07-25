@@ -39,9 +39,12 @@ public:
   void toggleFullscreen();
   void toggleVsync();
 
+  // Returns information about the OpenGL context version and Graphic Card
+  const char* graphicAdapterString();
+
 private:
-    // Stores the initialization status (true = successfully initialized, false otherwise)
-    bool _initializationStatus;
+  // Stores the initialization status (true = successfully initialized, false otherwise)
+  bool _initializationStatus;
 
   // Window and OpenGL context
   SDL_Window* _window;

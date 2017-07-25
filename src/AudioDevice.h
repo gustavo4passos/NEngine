@@ -1,6 +1,7 @@
 #ifndef AUDIODEVICE_H
 #define AUDIODEVICE_H
 
+#include <stdio.h>
 #include <al.h>
 #include <alc.h>
 
