@@ -1,6 +1,6 @@
 #include "GraphicsDevice.h"
 
-GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync)
+GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync, bool alphaEnabled)
  : _windowWidth(windowWidth), _windowHeight(windowHeight), _isFullscreen(fullscreen), _vsync(vsync)
 {
   //Check if SDL was initialized correctly (SDL_Init returns a negative value in case it was not able to initialize SDL)
@@ -73,6 +73,13 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
               {
                 printf("SDL ERROR: Unable to enable Vsync. Error: %s\n", SDL_GetError());
               }
+            }
+
+            if(alphaEnabled)
+            {
+              printf("Transparency enabled.\n");
+              glEnable(GL_BLEND);
+              glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
           }
         }

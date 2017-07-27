@@ -4,10 +4,6 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-Game	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^Game::Game(const char* windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int glMajorVersion, unsigned int glMinorVersion, bool fullscreen, bool vsync)$/;"	function	line:17	class:Game	signature:(const char* windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int glMajorVersion, unsigned int glMinorVersion, bool fullscreen, bool vsync)
-~Game	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^Game::~Game()$/;"	function	line:25	class:Game	signature:()
-handleInput	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::handleInput()$/;"	function	line:34	class:Game	signature:()
-update	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::update()$/;"	function	line:42	class:Game	signature:()
-draw	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::draw()$/;"	function	line:45	class:Game	signature:()
-run	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::run()$/;"	function	line:51	class:Game	signature:()
-close	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::close()$/;"	function	line:62	class:Game	signature:()
+Hero	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, float speed,  Shader* shader, float framesw, float framesh)$/;"	function	line:5	class:Hero	signature:(const char* textureFilePath, int x, int y, int width, int height, float speed, Shader* shader, float framesw, float framesh)
+update	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^void Hero::update(unsigned int gameTime)$/;"	function	line:35	class:Hero	signature:(unsigned int gameTime)
+draw	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^void Hero::draw()$/;"	function	line:69	class:Hero	signature:()

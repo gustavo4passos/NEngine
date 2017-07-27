@@ -3,10 +3,6 @@
 #include "Shader.h"
 #include "AudioEngine.h"
 #include "Texture.h"
-#include "../glm/glm.hpp"
-#include "../glm/gtc/matrix_transform.hpp"
-#include "../glm/gtx/transform.hpp"
-#include "../glm/gtc/type_ptr.hpp"
 #include "GraphicEngine.h"
 #include "Hero.h"
 #include <SDL2/SDL.h>
@@ -14,12 +10,17 @@
 #include <vector>
 #include <string>
 
-Game::Game(const char* windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int glMajorVersion, unsigned int glMinorVersion, bool fullscreen, bool vsync)
+Game::Game(const char* windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int glMajorVersion, unsigned int glMinorVersion, bool fullscreen, bool vsync, bool transparency)
 {
-  _graphicsDevice = new GraphicsDevice(windowTitle, windowWidth, windowHeight, glMajorVersion, glMinorVersion, fullscreen, vsync);
+  _graphicsDevice = new GraphicsDevice(windowTitle, windowWidth, windowHeight, glMajorVersion, glMinorVersion, fullscreen, vsync, transparency);
   _graphicsDevice->clearColor(0.f, 0.f, 0.f, 1.f);
+    _audioDevice = new AudioDevice();
 
-  _audioDevice = new AudioDevice();
+  defaultShader = new Shader("../shaders/sprite_render.vs", "../shaders/sprite_render.fs");
+  hero = new Hero("../resources/sprites/jumper.png", 50, 50, 40, 40 , 5, defaultShader, 1, 1);
+
+  // Set orthographic matrix
+  ortho = glm::ortho(0.f, float(_graphicsDevice->windowWidth()), float(_graphicsDevice->windowHeight()), 0.f);
 }
 
 Game::~Game()
@@ -39,12 +40,20 @@ void Game::handleInput()
   if(InputHandler::instance()->closedWindow()) _running = false;
 }
 
-void Game::update()
-{}
+void Game::update(unsigned int GameTime)
+{
+  hero->update(GameTime);
+}
 
 void Game::draw()
 {
+  GraphicEngine::instance()->useShader(defaultShader);
+  defaultShader->setMat4("ortho", glm::value_ptr(ortho));
+
   _graphicsDevice->clear();
+
+  hero->draw();
+
   _graphicsDevice->swap();
 }
 
@@ -53,10 +62,12 @@ void Game::run()
   _running = true;
     while(_running)
     {
-    handleInput();
-    update();
-    draw();
+      handleInput();
+      update(SDL_GetTicks());
+      draw();
   }
+
+  close();
 }
 
 void Game::close()

@@ -12,8 +12,6 @@ using namespace std;
 
 int main(int argc, char** args)
 {
-  SDL_Surface* test = IMG_Load("../resources/sprites/jumper.png");
-  printf("Value: %i and SDL_PIXELFORMAT_RGBA32 is %i\n", test->format->format, SDL_PIXELFORMAT_RGBA32);
   vector<string> attributes;
   attributes.push_back(string("width"));
   attributes.push_back(string("height"));
@@ -21,6 +19,8 @@ int main(int argc, char** args)
   attributes.push_back(string("minor_version"));
   attributes.push_back(string("fullscreen"));
   attributes.push_back(string("vsync"));
+  attributes.push_back(string("transparency"));
+
   vector<int> data;
   XMLParser::instance()->getAttributes("../data/config.xml", "CONFIG", attributes, &data);
   if(!data.size())
@@ -35,7 +35,7 @@ int main(int argc, char** args)
 
 
   srand(time(NULL));
-  Game game("NEngine", data[0], data[1], data[2], data[3], data[4], data[5]);
+  Game game("NEngine", data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
   game.run();
   return 0;
 }

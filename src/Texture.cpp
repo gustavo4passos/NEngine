@@ -84,3 +84,9 @@ Texture::Texture(std::string path, bool linearFiltering, bool mirrorRepeat)
 
   }
 }
+
+void Texture::use()
+{
+  // Binds texture to thea active OpenGL context
+  glBindTexture(GL_TEXTURE_2D, _id);
+}
