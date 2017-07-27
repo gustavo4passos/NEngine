@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include "Texture.h"
 
-Texture::Texture(std::string path, std::string internalFormatName, std::string formatName, bool linearFiltering, bool mirrorRepeat)
-                 : _internalFormat(internalFormatName), _format(formatName)
+Texture::Texture(std::string path, bool linearFiltering, bool mirrorRepeat)
 {
   SDL_Surface* surface = IMG_Load(path.c_str());
   // Check if surface loaded correctly
@@ -22,20 +21,19 @@ Texture::Texture(std::string path, std::string internalFormatName, std::string f
     GLint internalFormat;
     GLenum format;
 
-    if(internalFormatName == "RGB") internalFormat = GL_RGB;
-    else if(internalFormatName == "RGBA") internalFormat = GL_RGBA;
-    else
+    // Check the internal format of the texutre, and chose the GLenum accordginly
+    if(surface->format->format == SDL_PIXELFORMAT_RGB24)
     {
-      printf("Texture format not recognized: %s. Setting it as standard GL_RGB.\n", internalFormatName.c_str());
-      internalFormat = GL_RGB;
+      internalFormat = format = GL_RGB;
     }
-
-    if(formatName == "RGB") format = GL_RGB;
-    else if(formatName == "RGBA") format = GL_RGBA;
+    else if(surface->format->format == SDL_PIXELFORMAT_RGBA32)
+    {
+      internalFormat = format = GL_RGBA;
+    }
     else
     {
-      printf("Texture format not recognized: %s. Setting it as standard GL_RGB.\n", formatName.c_str());
-      format = GL_RGB;
+      printf("Texture format not recognized: %s. Setting it as standard GL_RGB.\n");
+      internalFormat = GL_RGB;
     }
 
     glGenTextures(1, &_id);
@@ -75,7 +73,7 @@ Texture::Texture(std::string path, std::string internalFormatName, std::string f
 
     //Unbind texture from context after loading
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     //Check for errors
     GLenum error = glGetError();
     while(error != GL_NO_ERROR)

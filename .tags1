@@ -1,0 +1,13 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Game	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^Game::Game(const char* windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int glMajorVersion, unsigned int glMinorVersion, bool fullscreen, bool vsync)$/;"	function	line:17	class:Game	signature:(const char* windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int glMajorVersion, unsigned int glMinorVersion, bool fullscreen, bool vsync)
+~Game	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^Game::~Game()$/;"	function	line:25	class:Game	signature:()
+handleInput	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::handleInput()$/;"	function	line:34	class:Game	signature:()
+update	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::update()$/;"	function	line:42	class:Game	signature:()
+draw	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::draw()$/;"	function	line:45	class:Game	signature:()
+run	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::run()$/;"	function	line:51	class:Game	signature:()
+close	C:\Library, Programming & Game Making\Projects\NEngine\src\Game.cpp	/^void Game::close()$/;"	function	line:62	class:Game	signature:()

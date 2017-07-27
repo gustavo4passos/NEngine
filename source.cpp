@@ -2,13 +2,18 @@
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
+#include "src/texture.h"
 #include "src/Game.h"
 #include "src/XMLParser.h"
+#include "tinyxml/tinyxml.h"
+#include "tinyxml/tinystr.h"
 
 using namespace std;
 
 int main(int argc, char** args)
 {
+  SDL_Surface* test = IMG_Load("../resources/sprites/jumper.png");
+  printf("Value: %i and SDL_PIXELFORMAT_RGBA32 is %i\n", test->format->format, SDL_PIXELFORMAT_RGBA32);
   vector<string> attributes;
   attributes.push_back(string("width"));
   attributes.push_back(string("height"));

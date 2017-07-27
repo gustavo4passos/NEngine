@@ -7,7 +7,7 @@
 class Texture
 {
 public:
-  Texture(std::string path, std::string internalFormatName, std::string formatName, bool linearFiltering = false, bool mirrorRepeat = false);
+  Texture(std::string path, bool linearFiltering = false, bool mirrorRepeat = false);
   // Texture(std::string std::string internalFormatName, std::string formatName, int width, int height, const GLvoid* pixels, bool linearFiltering = false, bool mirrorRepeat = false);
   GLuint id() const { return _id; }
 
