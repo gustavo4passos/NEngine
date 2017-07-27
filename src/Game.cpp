@@ -11,6 +11,9 @@
 #include "Hero.h"
 #include <SDL2/SDL.h>
 
+#include <vector>
+#include <string>
+
 Game::Game(const char* windowTitle, unsigned int windowWidth, unsigned int windowHeight, unsigned int glMajorVersion, unsigned int glMinorVersion, bool fullscreen, bool vsync)
 {
   _graphicsDevice = new GraphicsDevice(windowTitle, windowWidth, windowHeight, glMajorVersion, glMinorVersion, fullscreen, vsync);
