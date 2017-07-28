@@ -1,4 +1,6 @@
-OBJS = source.cpp src/Shader.cpp src/GraphicsDevice.cpp src/InputHandler.cpp src/GraphicEngine.cpp src/Texture.cpp src/AudioDevice.cpp src/AudioEngine.cpp src/Hero.cpp src/Game.cpp
+OBJS = source.cpp src/Shader.cpp src/GraphicsDevice.cpp src/InputHandler.cpp src/GraphicEngine.cpp src/Texture.cpp src/AudioDevice.cpp src/AudioEngine.cpp src/Hero.cpp src/Game.cpp src/XMLParser.cpp src/Loader.cpp src/Background.cpp
+
+TINY_XML_CPPS = tinyxml/tinyxml.cpp tinyxml/tinystr.cpp tinyxml/tinyxmlparser.cpp tinyxml/tinyxmlerror.cpp
 
 CC = g++
 
@@ -15,4 +17,4 @@ LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lglu32 -lO
 OBJ_NAME = bin/NEngine
 
 all : $(OBJS)
-	$(CC) $(OBJS) $(INCLUDE_PATHS) $(OPENAL_INCLUDES) $(LIBRARY_PATHS) $(OPENAL_LIBS) $(CONPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+	$(CC) $(OBJS) $(TINY_XML_CPPS) $(INCLUDE_PATHS) $(OPENAL_INCLUDES) $(LIBRARY_PATHS) $(OPENAL_LIBS) $(CONPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)

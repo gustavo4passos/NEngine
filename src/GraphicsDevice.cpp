@@ -1,6 +1,6 @@
 #include "GraphicsDevice.h"
 
-GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync)
+GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync, bool alphaEnabled)
  : _windowWidth(windowWidth), _windowHeight(windowHeight), _isFullscreen(fullscreen), _vsync(vsync)
 {
   //Check if SDL was initialized correctly (SDL_Init returns a negative value in case it was not able to initialize SDL)
@@ -74,6 +74,24 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
                 printf("SDL ERROR: Unable to enable Vsync. Error: %s\n", SDL_GetError());
               }
             }
+
+            if(alphaEnabled)
+            {
+              printf("Transparency enabled.\n");
+              glEnable(GL_BLEND);
+              glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            }
+
+            // Query information about the context
+            GLint majorVersion, minorVersion;
+            glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+            glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+            // Query information about the video card
+            const GLubyte* adapter = glGetString(GL_RENDERER);
+            // Print data about the current context and graphic adapter
+            printf("Graphic Adapter: %s\n", adapter);
+            printf("OpenGL version %i.%i\n", majorVersion, minorVersion);
+
           }
         }
       }

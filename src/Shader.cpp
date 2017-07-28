@@ -92,8 +92,45 @@ void Shader::vertexAttribPointer(const char* attribName, unsigned int size, unsi
   }
 }
 
+// Loads a flot into the shader
+void Shader::setUniform1f(const char* uniformName, GLfloat value)
+{
+  GLint uniformLocation = glGetUniformLocation(_id, uniformName);
+  if(uniformLocation < 0)
+  {
+    printf("OPENGL SHADER ERROR: Unable to find uniform: %s\n", uniformName);
+  }
+  else
+  {
+    printf("Uniform %s location %i\n", uniformName, value);
+    glUniform1f(uniformLocation, value);
+  }
+}
+
+void Shader::setUniform2fv(const char* uniformName, GLfloat* data)
+{
+  GLint uniformLocation = glGetUniformLocation(_id, uniformName);
+  if(uniformLocation < 0)
+  {
+    printf("OPENGL SHADER ERROR: Unable to find uniform: %s\n", uniformName);
+  }
+  else
+  {
+    glUniform2fv(uniformLocation, 1, data);
+  }
+}
+
 // Loads a 4x4 matris into the shader
 void Shader::setMat4(const char* uniformName, GLfloat* matrix) const
 {
-  glUniformMatrix4fv(glGetUniformLocation(_id, uniformName), 1, GL_FALSE, matrix);
+  GLint uniformLocation = glGetUniformLocation(_id, uniformName);
+
+  if(uniformLocation < 0)
+  {
+    printf("OPENGL SHADER ERROR: Unable to find Mat4 uniform: %s\n", uniformName);
+  }
+  else
+  {
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, matrix);
+  }
 }

@@ -6,19 +6,19 @@ class Vector2D
 public:
 	Vector2D(float x, float  y) : _x(x), _y(y) {}
 
-	float x() { return _x; }
-	float y() { return _y; }
+	float x() const { return _x; }
+	float y() const { return _y; }
 
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }
 
 	float length() { return sqrt(_x * _x + _y * _y); }
 
-	void normalize() 
+	void normalize()
 	{
-		if(length() > 0) (*this) *= 1 / length(); 
+		if(length() > 0) (*this) *= 1 / length();
 	}
-	
+
 	float dotProduct(Vector2D v)
 	{
 		return (_x * v._x) + (_y * v._y);
@@ -79,4 +79,3 @@ private:
 	float _x;
 	float _y;
 };
-
