@@ -81,6 +81,17 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
               glEnable(GL_BLEND);
               glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
+
+            // Query information about the context
+            GLint majorVersion, minorVersion;
+            glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+            glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+            // Query information about the video card
+            const GLubyte* adapter = glGetString(GL_RENDERER);
+            // Print data about the current context and graphic adapter
+            printf("Graphic Adapter: %s\n", adapter);
+            printf("OpenGL version %i.%i\n", majorVersion, minorVersion);
+
           }
         }
       }

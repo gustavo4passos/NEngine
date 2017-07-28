@@ -8,9 +8,10 @@
 #include "../glm/gtx/transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 
-// A temp declaration of our Hero class declared in Hero.h
+// A temp declarations, actual classes will be included inside the .cpp
 class Hero;
 class Shader;
+class Background;
 
 class Game
 {
@@ -35,9 +36,13 @@ private:
 
   // Shaders
   Shader* defaultShader;
+  Shader* staticShader;
 
   // Game characters
-  Hero* hero;
+  Hero* _hero;
+
+  // Game world
+  Background* _background;
 
   // Matrices
   glm::mat4 ortho;

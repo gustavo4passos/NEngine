@@ -1,0 +1,6 @@
+<? xml version="1.0" ?>
+<DATA>
+  <HERO>
+    <data sprite="../resources/sprites/professor.png" x="100" y="150" width="128" height="128" speed="5" framesx="9" framesy="4"/>
+  </HERO>
+</DATA>

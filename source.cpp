@@ -4,7 +4,7 @@
 #include <iostream>
 #include "src/texture.h"
 #include "src/Game.h"
-#include "src/XMLParser.h"
+#include "src/Loader.h"
 #include "tinyxml/tinyxml.h"
 #include "tinyxml/tinystr.h"
 
@@ -22,7 +22,7 @@ int main(int argc, char** args)
   attributes.push_back(string("transparency"));
 
   vector<int> data;
-  XMLParser::instance()->getAttributes("../data/config.xml", "CONFIG", attributes, &data);
+  Loader::instance()->loadConfig("../data/config.xml", "CONFIG", attributes, &data);
   if(!data.size())
   {
     printf("Unable to load config file. Exiting.\n");

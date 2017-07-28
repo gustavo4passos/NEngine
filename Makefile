@@ -1,4 +1,4 @@
-OBJS = source.cpp src/Shader.cpp src/GraphicsDevice.cpp src/InputHandler.cpp src/GraphicEngine.cpp src/Texture.cpp src/AudioDevice.cpp src/AudioEngine.cpp src/Hero.cpp src/Game.cpp src/XMLParser.cpp
+OBJS = source.cpp src/Shader.cpp src/GraphicsDevice.cpp src/InputHandler.cpp src/GraphicEngine.cpp src/Texture.cpp src/AudioDevice.cpp src/AudioEngine.cpp src/Hero.cpp src/Game.cpp src/XMLParser.cpp src/Loader.cpp src/Background.cpp
 
 TINY_XML_CPPS = tinyxml/tinyxml.cpp tinyxml/tinystr.cpp tinyxml/tinyxmlparser.cpp tinyxml/tinyxmlerror.cpp
 

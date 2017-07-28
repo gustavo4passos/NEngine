@@ -90,3 +90,10 @@ void Texture::use()
   // Binds texture to thea active OpenGL context
   glBindTexture(GL_TEXTURE_2D, _id);
 }
+
+Texture::~Texture()
+{
+  // Unbinds texture, and delete it from video memory
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glDeleteTextures(1, &_id);
+}

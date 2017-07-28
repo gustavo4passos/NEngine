@@ -29,7 +29,7 @@ void GraphicEngine::draw(GLuint vao, Texture* texture, GLuint first, GLuint coun
   glDrawArrays(GL_TRIANGLES, first, count);
 }
 
-void GraphicEngine::drawFan(GLuint vao, Texture* texture, GLuint first, GLuint count)
+void GraphicEngine::drawFan(GLuint vao, Texture* texture)
 {
   if(texture->id() != _currentTexture)
   {
@@ -38,11 +38,11 @@ void GraphicEngine::drawFan(GLuint vao, Texture* texture, GLuint first, GLuint c
   }
 
   glBindVertexArray(vao);
-  glDrawArrays(GL_TRIANGLE_FAN, first, count);
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 // Draw sprite in a certain position, stored in a Vector2D
-void GraphicEngine::drawFan(GLuint vao, Texture* texture, const Vector2D* position, GLuint first, GLuint count)
+void GraphicEngine::drawFan(GLuint vao, Texture* texture, const Vector2D* position)
 {
   if(texture->id() != _currentTexture)
   {
@@ -60,7 +60,33 @@ void GraphicEngine::drawFan(GLuint vao, Texture* texture, const Vector2D* positi
   {
     printf("GRAPHIC ENGINE ERROR: Can't draw sprite. The current shader is NULL.");
   }
-  glDrawArrays(GL_TRIANGLE_FAN, first, count);
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+}
+
+void GraphicEngine::drawFrame(GLuint vao, Texture* texture, const Vector2D* position, float currentFramex, float currentFramey)
+{
+  if(texture->id() != _currentTexture)
+  {
+    texture->use();
+    _currentTexture = texture->id();
+  }
+
+  glBindVertexArray(vao);
+
+  glm::mat4 translate;
+  translate = glm::translate(translate, glm::vec3(position->x(), position->y(), 0.f));
+
+  if(_currentShader != NULL)
+  {
+    _currentShader->setMat4("transform", glm::value_ptr(translate));
+    GLfloat frames[2] = { currentFramex, currentFramey };
+    _currentShader->setUniform2fv("currentFrame", frames);
+  }
+  else
+  {
+    printf("GRAPHIC ENGINE ERROR: Can't draw sprite. The current shader is NULL.");
+  }
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 void GraphicEngine::drawElements(GLuint vao, Texture* texture, GLuint first, GLuint count)

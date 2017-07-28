@@ -4,6 +4,12 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-Hero	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, float speed,  Shader* shader, float framesw, float framesh)$/;"	function	line:5	class:Hero	signature:(const char* textureFilePath, int x, int y, int width, int height, float speed, Shader* shader, float framesw, float framesh)
-update	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^void Hero::update(unsigned int gameTime)$/;"	function	line:35	class:Hero	signature:(unsigned int gameTime)
-draw	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^void Hero::draw()$/;"	function	line:69	class:Hero	signature:()
+GraphicsDevice	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync, bool alphaEnabled)$/;"	function	line:3	class:GraphicsDevice	signature:(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync, bool alphaEnabled)
+clearColor	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^void GraphicsDevice::clearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)$/;"	function	line:102	class:GraphicsDevice	signature:(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+clear	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^void GraphicsDevice::clear()$/;"	function	line:107	class:GraphicsDevice	signature:()
+swap	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^void GraphicsDevice::swap()$/;"	function	line:112	class:GraphicsDevice	signature:()
+checkForErrors	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^int GraphicsDevice::checkForErrors()$/;"	function	line:117	class:GraphicsDevice	signature:()
+setWindowSize	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^void GraphicsDevice::setWindowSize(unsigned int windowWidth, unsigned int windowHeight)$/;"	function	line:135	class:GraphicsDevice	signature:(unsigned int windowWidth, unsigned int windowHeight)
+toggleFullscreen	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^void GraphicsDevice::toggleFullscreen()$/;"	function	line:140	class:GraphicsDevice	signature:()
+toggleVsync	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^void GraphicsDevice::toggleVsync()$/;"	function	line:154	class:GraphicsDevice	signature:()
+close	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.cpp	/^void GraphicsDevice::close()$/;"	function	line:182	class:GraphicsDevice	signature:()

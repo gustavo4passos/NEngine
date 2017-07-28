@@ -1,4 +1,4 @@
-  #ifndef TEXTURE_H
+#ifndef TEXTURE_H
 #define TEXTURE_H
 
 #include <string>
@@ -8,7 +8,7 @@ class Texture
 {
 public:
   Texture(std::string path, bool linearFiltering = false, bool mirrorRepeat = false);
-  // Texture(std::string std::string internalFormatName, std::string formatName, int width, int height, const GLvoid* pixels, bool linearFiltering = false, bool mirrorRepeat = false);
+  ~Texture();
   GLuint id() const { return _id; }
   int width() const { return _width; }
   int height() const { return _height; }
