@@ -1,10 +1,17 @@
 #include "Loader.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
-#include "Shader.h"
+#include "Background.h"
+#include "GraphicEngine.h"
 #include "Hero.h"
+#include "Layer.h"
+#include "Shader.h"
+#include "Tileset.h"
+#include "World.h"
 
+// Starts static instance as 0 so the singleton can be instantiated later
 Loader* Loader::_instance = 0;
 
 void Loader::loadConfig(const char* file, std::string elementName, std::vector<std::string> attributes, std::vector<int>* data)
@@ -75,17 +82,236 @@ Hero* Loader::loadHero(const char* file, Shader* shader)
 
     // Retrieve data
     const char* sprite = data->Attribute("sprite");
-    int x, y, width, height, speed, framesx, framesy;
+    int x, y, width, height, framesx, framesy;
+    float speed;
     data->Attribute("x", &x);
     data->Attribute("y", &y);
     data->Attribute("width", &width);
     data->Attribute("height", &height);
-    data->Attribute("speed", &speed);
+    data->QueryFloatAttribute("speed", &speed);
     data->Attribute("framesx", &framesx);
     data->Attribute("framesy", &framesy);
 
     // Creates and return hero based on data
     Hero* hero = new Hero(sprite, x, y, width, height, speed, shader, framesx, framesy);
     return hero;
+  }
+}
+
+Background* Loader::loadBackground(const char* file, Shader* shader)
+{
+    TiXmlDocument doc(file);
+    bool success = doc.LoadFile();
+    if(!success)
+    {
+      printf("LOADER ERROR: Unable to open XML file ('%s'). Erorr: %s\n", file, doc.ErrorDesc());
+      return NULL;
+    }
+    else
+    {
+      TiXmlElement* root = doc.RootElement();
+      TiXmlElement* bgElement = NULL;
+      for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+      {
+        if(e->Value() == std::string("BACKGROUND"))
+        {
+          bgElement = e;
+          break;
+        }
+      }
+
+      if(bgElement == NULL)
+      {
+        printf("LOADER ERROR: Unable to find BACKGROUND element in %s. Returning NULL.\n", file);
+        return NULL;
+      }
+
+      // Gets the data element
+      TiXmlElement* data = bgElement->FirstChildElement();
+
+      // Retrieve data
+      const char* file = data->Attribute("file");
+      int width, height;
+      data->Attribute("width", &width);
+      data->Attribute("height", &height);
+
+      // Creates and return hero based on data
+      Background* background = new Background(file, shader, width, height);
+      return background;
+    }
+}
+
+Tileset* Loader::loadTileset(const char* tsxFile)
+{
+  TiXmlDocument doc(tsxFile);
+  bool success = doc.LoadFile();
+  if(!success)
+  {
+    printf("LOADER ERROR: Unable to load tileset from tmx file. Path: %s\nError: %s\n", tsxFile, doc.ErrorDesc());
+    return NULL;
+  }
+  else
+  {
+    TiXmlElement* root = doc.RootElement();
+
+    std::string name;
+    int tileWidth, tileHeight, columns;
+
+    root->QueryStringAttribute("name", &name);
+    root->QueryIntAttribute("tilewidth", &tileWidth);
+    root->QueryIntAttribute("tileheight", &tileHeight);
+    root->QueryIntAttribute("columns", &columns);
+
+    std::string source;
+    int width, height;
+
+    TiXmlElement* imageElement = root->FirstChildElement();
+
+    imageElement->QueryStringAttribute("source", &source);
+    imageElement->QueryIntAttribute("width", &width);
+    imageElement->QueryIntAttribute("height", &height);
+
+    return new Tileset(source.c_str(), name.c_str(), width, height, tileWidth, tileHeight, columns);
+  }
+}
+
+Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* shader)
+{
+  std::string layerName;
+  int width;
+  int height;
+
+  // Retrieve layer attributes
+  layerElement->QueryStringAttribute("name", &layerName);
+  layerElement->QueryIntAttribute("width", &width);
+  layerElement->QueryIntAttribute("height", &height);
+
+  // Get layer data in a string
+  TiXmlNode* dataNode = layerElement->FirstChildElement()->FirstChild();
+  TiXmlText* dataNodeText = dataNode->ToText();
+  std::string data = dataNodeText->Value();
+
+  // Stores position of the character in the string
+  std::size_t foundAt = 0;
+  std::size_t previous = 0;
+
+  std::vector<GLfloat> vbodata;
+  std::vector<GLuint> ebodata;
+
+  // Reference for ebo
+  int index = 0;
+
+  for(int i = 0; i < height; i++)
+  {
+    for(int j = 0; j < width  ; j++)
+    {
+      previous = foundAt;
+      foundAt = data.find(",", foundAt + 1);
+      std::string id("");
+
+      if(int(previous == 0))
+      {
+        id = data.substr(previous, foundAt - previous);
+      }
+      else if(int(foundAt) < 0)
+      {
+        id = data.substr(previous + 1, data.size() - previous);
+      }
+      else
+      {
+        id = data.substr(previous + 1, foundAt - previous - 1);
+      }
+
+      int tile = atoi(id.c_str());
+
+      // Empty tile
+      if(tile == 0)
+      {
+        continue;
+      }
+
+      // Position of the tile in the tileset
+      float tilex, tiley;
+      tilex = (tile - 1) % tileset->columns(); // We subtract because the first index is 1
+      tiley = (tile - 1) / tileset->columns();
+      // Helps find the tex coordinate of the tile
+      float stridex, stridey;
+      stridex = 1.f / tileset->columns();
+      stridey = 1.f / tileset->rows();
+
+      // Decides the position of the vertex based on the tileset and layer information
+      GLfloat vertices[] =
+      {
+        tileset->tileWidth() * j                         , tileset->tileHeight() * i                             , stridex * tilex            , stridey * tiley,
+        (tileset->tileWidth() * j) + tileset->tileWidth(), tileset->tileHeight() * i                             , (stridex * tilex) + stridex, stridey * tiley,
+        (tileset->tileWidth() * j) + tileset->tileWidth(), (tileset->tileHeight() * i) + tileset->tileHeight()   , (stridex * tilex) + stridex, (stridey * tiley) + stridey,
+        tileset->tileWidth() * j                         , (tileset->tileHeight() * i) + tileset->tileHeight()   , stridex * tilex            , (stridey * tiley) + stridey
+      };
+
+      GLuint indices[] = { index, index + 1, index + 2, index + 2, index + 3, index };
+      index += 4;
+
+      vbodata.insert(vbodata.end(), vertices, vertices + 16);
+      ebodata.insert(ebodata.end(), indices, indices + 6);
+    }
+  }
+
+  GLuint vao, vbo, ebo;
+  vao = GraphicEngine::instance()->loadVao();
+  vbo = GraphicEngine::instance()->loadToVbo(&vbodata[0], sizeof(GLfloat) * vbodata.size());
+  ebo = GraphicEngine::instance()->loadToEbo(&ebodata[0], sizeof(GLuint) * ebodata.size());
+
+  shader->vertexAttribPointer("position", 2, 4, 0);
+  shader->vertexAttribPointer("texcoord", 2, 4, 2);
+
+  Layer* layer = new Layer(width, height, layerName.c_str(), vao, vbo, ebo, ebodata.size());
+  return layer;
+}
+
+World* Loader::loadWorld(const char* tmxFile, Shader* shader)
+{
+
+  TiXmlDocument doc(tmxFile);
+  bool success = doc.LoadFile();
+
+  if(!success)
+  {
+    printf("LOADER ERROR: Unable to load world. File: %s Error: %s\n", tmxFile, doc.ErrorDesc());
+    return NULL;
+  }
+  else
+  {
+    TiXmlElement* root = doc.RootElement();
+
+    Tileset* tileset;
+    World* world;
+    std::string tilesetFile;
+
+    // Search for the tileset source on the tmx file
+    for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+    {
+      if(e->Value() == std::string("tileset"))
+      {
+        e->QueryStringAttribute("source", &tilesetFile);
+      }
+    }
+
+    // Load tileset from tsx file
+    tileset = loadTileset(tilesetFile.c_str());
+
+    // Use the tileset to create world
+    world = new World(tileset);
+
+    // Load and add layers
+    for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+    {
+      if(e->Value() == std::string("layer"))
+      {
+        world->addLayer(loadLayer(e, tileset, shader));
+      }
+    }
+
+    // Return freshly build world
+    return world;
   }
 }

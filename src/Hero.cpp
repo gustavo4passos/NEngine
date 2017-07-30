@@ -1,9 +1,10 @@
 #include "Hero.h"
+#include <vector>
 #include "GraphicEngine.h"
 #include "InputHandler.h"
 
 Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, float speed,  Shader* shader, float framesx, float framesy)
-: _width(width), _height(height), _speed(speed), _framesx(framesx), _framesy(framesy), _position(Vector2D(x, y)), _velocity(Vector2D(0.f, 0.f))
+: _width(width), _height(height), _speed(speed), _framesx(framesx), _framesy(framesy), _position(Vector2D(x, y)), _velocity(Vector2D(0.f, 0.f)), _currentVelocity(0.f, 0.f)
 {
   _texture = new Texture(textureFilePath);
 
@@ -18,14 +19,15 @@ Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, flo
   _currentFramex = 0;
   _currentFramey = 0;
 
+  // Starts the time keeper as 0
+  _timeKeeper = 0;
+
+  // Transition speed to get to desired speed
+  _transitionSpeed = 0.015;
+
   // Get the tex stride for each frame
   _frameStridew = ((_texture->width() / framesx) / _texture->width());
   _frameStrideh = (_texture->height() / framesy) / _texture->height();
-
-  glGenVertexArrays(1, &_vao);
-  glBindVertexArray(_vao);
-  glGenBuffers(1, &_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
   GLfloat vertices[] =
   {  // Quad vertices          |  TexCoordinates
@@ -35,7 +37,9 @@ Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, flo
     0.f          , _height * 1.f, 0.f                           , _frameStrideh
   };
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  _vao = GraphicEngine::instance()->loadVao();
+  _vbo = GraphicEngine::instance()->loadToVbo(vertices, sizeof(vertices));
+
   shader->vertexAttribPointer("position", 2, 4, 0);
   shader->vertexAttribPointer("texcoord", 2, 4, 2);
 }
@@ -67,6 +71,10 @@ void Hero::handleInput()
     _velocity.setY(_speed);
   }
   if(!(InputHandler::instance()->keyDown(SDL_SCANCODE_DOWN)) && !(InputHandler::instance()->keyDown(SDL_SCANCODE_UP)))
+  {
+    _velocity.setY(0);
+  }
+  if(InputHandler::instance()->keyDown(SDL_SCANCODE_DOWN) && InputHandler::instance()->keyDown(SDL_SCANCODE_UP))
   {
     _velocity.setY(0);
   }
@@ -103,13 +111,23 @@ void Hero::animation(unsigned int gameTime)
     }
 }
 
+void Hero::move(unsigned int gameTime)
+{
+  unsigned int timeDifference = gameTime - _timeKeeper;
+  _currentVelocity.setX(_currentVelocity.x() * (1 - timeDifference * _transitionSpeed) + _velocity.x() * (timeDifference * _transitionSpeed));
+  _currentVelocity.setY(_currentVelocity.y() * (1 - timeDifference * _transitionSpeed) + _velocity.y() * (timeDifference * _transitionSpeed));
+  _position += _currentVelocity;
+}
+
 void Hero::update(unsigned int gameTime)
 {
   handleInput();
   animation(gameTime);
+  move(gameTime);
 
-  _position += _velocity;
+  _timeKeeper = gameTime;
 }
+
 
 void Hero::draw()
 {

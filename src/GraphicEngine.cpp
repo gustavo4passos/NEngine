@@ -89,14 +89,19 @@ void GraphicEngine::drawFrame(GLuint vao, Texture* texture, const Vector2D* posi
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-void GraphicEngine::drawElements(GLuint vao, Texture* texture, GLuint first, GLuint count)
+void GraphicEngine::drawElements(GLuint vao, Texture* texture, GLuint count)
 {
   if(texture->id() != _currentTexture)
   {
     texture->use();
     _currentTexture = texture->id();
   }
+  glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL);
+}
 
+void GraphicEngine::drawElements(GLuint vao, GLuint count)
+{
+  glBindVertexArray(vao);
   glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, NULL);
 }
 
@@ -115,4 +120,63 @@ void GraphicEngine::useShader(Shader* shader)
       _currentShader = shader;
     }
   }
+}
+
+void GraphicEngine::useTexture(Texture* texture)
+{
+  if(texture->id() != _currentTexture)
+  {
+    texture->use();
+    _currentTexture = texture->id();
+  }
+}
+
+// Gen and binds vertex array object
+GLuint GraphicEngine::loadVao()
+{
+  GLuint vao;
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
+
+  // Check for errors
+  GLenum error = glGetError();
+  if(error != GL_NO_ERROR)
+  {
+    printf("GRAPHIC ENGINE ERROR: Unable to load vertex array object. Error: %s\n", gluErrorString(error));
+  }
+  return vao;
+}
+
+// Gen and binds vertex buffer object
+GLuint GraphicEngine::loadToVbo(GLfloat data[], GLsizeiptr bytes)
+{
+  GLuint vbo;
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, bytes, data, GL_STATIC_DRAW);
+
+  // Check for errors
+  GLenum error = glGetError();
+  if(error != GL_NO_ERROR)
+  {
+    printf("GRAPHIC ENGINE ERROR: Unable to load vertex buffer object. Error: %s\n", gluErrorString(error));
+  }
+
+  return vbo;
+}
+
+GLuint GraphicEngine::loadToEbo(GLuint data[], GLsizeiptr bytes)
+{
+  GLuint ebo;
+  glGenBuffers(1, &ebo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, bytes, data, GL_STATIC_DRAW);
+
+  GLenum error = glGetError();
+  if(error != GL_NO_ERROR)
+  {
+    printf("GRAPHIC ENGINE ERROR: Unable to load element array object. Error: %s\n", gluErrorString(error));
+  }
+
+  return ebo;
 }

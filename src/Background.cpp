@@ -3,7 +3,7 @@
 
 Background::Background(const char* imageFile, Shader* shader, int width, int height)
 {
-  _texture = new Texture(imageFile);
+  _texture = new Texture(imageFile, true, true);
 
   _width = width;
   _height = height;
@@ -14,11 +14,6 @@ Background::Background(const char* imageFile, Shader* shader, int width, int hei
     _height = _texture->height();
   }
 
-  glGenVertexArrays(1, &_vao);
-  glBindVertexArray(_vao);
-  glGenBuffers(1, &_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-
   GLfloat vertices[] =
   { // Vertices                            Tex coordinates
     0.f   , 0.f    , 0.f, 0.f,
@@ -27,7 +22,9 @@ Background::Background(const char* imageFile, Shader* shader, int width, int hei
     0.f   , _height, 0.f, 1.f
   };
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  _vao = GraphicEngine::instance()->loadVao();
+  _vbo = GraphicEngine::instance()->loadToVbo(vertices, sizeof(vertices));
+
   shader->vertexAttribPointer("position", 2, 4, 0);
   shader->vertexAttribPointer("texcoord", 2, 4, 2);
 }

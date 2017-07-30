@@ -1,6 +1,10 @@
 <? xml version="1.0" ?>
 <DATA>
   <HERO>
-    <data sprite="../resources/sprites/professor.png" x="100" y="150" width="128" height="128" speed="5" framesx="9" framesy="4"/>
+    <data sprite="../resources/sprites/professor.png" x="100" y="150" width="128" height="128" speed="5.0" framesx="9" framesy="4"/>
   </HERO>
+
+  <BACKGROUND>
+    <data file="../resources/bg/pixelated.png" width="1366" height="768"/>
+  </BACKGROUND>
 </DATA>

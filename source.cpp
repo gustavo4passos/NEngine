@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include <cmath>
 #include <stdlib.h>
 #include <time.h>
@@ -5,13 +9,16 @@
 #include "src/texture.h"
 #include "src/Game.h"
 #include "src/Loader.h"
-#include "tinyxml/tinyxml.h"
-#include "tinyxml/tinystr.h"
 
 using namespace std;
 
 int main(int argc, char** args)
 {
+  // Hide console in windows
+  #ifdef _WIN32
+  // ShowWindow(GetConsoleWindow(), SW_HIDE);
+  #endif
+
   vector<string> attributes;
   attributes.push_back(string("width"));
   attributes.push_back(string("height"));

@@ -24,9 +24,16 @@ public:
   void drawFan(GLuint vao, Texture* texture);
   void drawFan(GLuint vao, Texture* texture, const Vector2D* position);
   void drawFrame(GLuint vao, Texture* texture, const Vector2D* position, float currentFramex = 0, float currentFramey = 0);
-  void drawElements(GLuint vao, Texture* texture, GLuint first = 0, GLuint count = 4);
+  void drawElements(GLuint vao, Texture* texture, GLuint count);
+  void drawElements(GLuint vao, GLuint count);
+
+  // Load functions
+  GLuint loadVao();
+  GLuint loadToVbo(GLfloat data[], GLsizeiptr bytes);
+  GLuint loadToEbo(GLuint data[], GLsizeiptr bytes);
 
   void useShader(Shader* shader);
+  void useTexture(Texture* texture);
 
 private:
   // Define only instance

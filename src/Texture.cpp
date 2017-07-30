@@ -32,8 +32,8 @@ Texture::Texture(std::string path, bool linearFiltering, bool mirrorRepeat)
     }
     else
     {
-      printf("Texture format not recognized: %s. Setting it as standard GL_RGB.\n");
-      internalFormat = GL_RGB;
+      printf("Texture format not recognized: %s. Setting it as standard GL_RGBA.\n");
+      internalFormat = GL_RGBA;
     }
 
     glGenTextures(1, &_id);

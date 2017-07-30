@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="30" height="25" tilewidth="32" tileheight="32" nextobjectid="1">
- <tileset firstgid="1" source="../sprites/fantasy-tileset.tsx"/>
+ <tileset firstgid="1" source="../resources/tilesets/fantasy-tileset.tsx"/>
  <layer name="Tile Layer 1" width="30" height="25">
   <data encoding="csv">
 29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,
