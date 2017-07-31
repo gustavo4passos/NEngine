@@ -4,8 +4,13 @@
 #include <string>
 #include <vector>
 
+class Background;
 class Hero;
+class Layer;
 class Shader;
+class Tileset;
+class TiXmlElement;
+class World;
 
 class Loader
 {
@@ -27,6 +32,15 @@ public:
 
   // Load a hero object from a xml file
   Hero* loadHero(const char* file, Shader* shader);
+
+  // Load a Background image from a xml file
+  Background* loadBackground(const char* file, Shader* shader);
+
+  // Load World
+  Tileset* loadTileset(const char* tsxFile);
+  Layer* loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* shader);
+  void loadCollisionLayer(TiXmlElement* objectGroupElement, World* world);
+  World* loadWorld(const char* tmxFile, Shader* shader);
 
 private:
   static Loader* _instance;

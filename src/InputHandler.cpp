@@ -4,16 +4,13 @@
 // Create the only instance
 InputHandler* InputHandler::_instance = 0;
 
-InputHandler::InputHandler()
+InputHandler::InputHandler() : _mousePos(0, 0)
 {
-  _closedWindow = false;
+  // Clears the keyboard
   _keyboardState = 0;
 
-  // Initialize keyboard map as false for keyup test
-  for(int i = 0; i < 500; i++)
-  {
-    _keyUp[100] = false;
-  }
+  // Stores if the user tried to close the windows
+  _closedWindow = false;
 }
 
 InputHandler::~InputHandler()
@@ -24,6 +21,13 @@ InputHandler::~InputHandler()
 // Check for input
 void InputHandler::update()
 {
+
+  // Get mouse position
+  int mousex, mousey;
+  SDL_GetMouseState(&mousex, &mousey);
+  _mousePos.setX(float(mousex));
+  _mousePos.setY(float(mousey));
+
   SDL_Event e;
   while(SDL_PollEvent(&e) != 0)
   {
@@ -31,26 +35,11 @@ void InputHandler::update()
     {
       _closedWindow = true;
     }
-    if(e.type == SDL_KEYUP && e.key.keysym.sym == SDLK_ESCAPE)
-    {
-    _keyUp[SDL_SCANCODE_ESCAPE] = true;
-    }
-    else
-    {
-      _keyUp[SDL_SCANCODE_ESCAPE] = false;
-    }
-    if(e.type == SDL_KEYUP && e.key.keysym.sym == SDLK_F5)
-    {
-    _keyUp[SDL_SCANCODE_F5] = true;
-    }
-    else
-    {
-      _keyUp[SDL_SCANCODE_F5] = false;
-    }
   }
 
   // Store the kebyaord state at the moment
-  _keyboardState = SDL_GetKeyboardState(0);
+  _keyboardState =  SDL_GetKeyboardState(0);
+
 }
 
 bool InputHandler::closedWindow()
@@ -76,7 +65,7 @@ bool InputHandler::keyDown(SDL_Scancode key) const
 
 bool InputHandler::keyUp(SDL_Scancode key) const
 {
-  if(_keyUp[key])
+  if(_keyboardState[key])
   {
     return true;
   }

@@ -38,6 +38,7 @@ public:
   void setWindowSize(unsigned int windowWidth, unsigned int windowHeight);
   void toggleFullscreen();
   void toggleVsync();
+  void showCursor(bool visible);
 
   // Returns information about the OpenGL context version and Graphic Card
   const char* graphicAdapterString();

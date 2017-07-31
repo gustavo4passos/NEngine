@@ -12,6 +12,9 @@
 class Hero;
 class Shader;
 class Background;
+class Tileset;
+class Layer;
+class World;
 
 class Game
 {
@@ -42,7 +45,7 @@ private:
   Hero* _hero;
 
   // Game world
-  Background* _background;
+  World* _world;
 
   // Matrices
   glm::mat4 ortho;

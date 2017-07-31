@@ -91,7 +91,6 @@ GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHei
             // Print data about the current context and graphic adapter
             printf("Graphic Adapter: %s\n", adapter);
             printf("OpenGL version %i.%i\n", majorVersion, minorVersion);
-
           }
         }
       }
@@ -143,11 +142,13 @@ void GraphicsDevice::toggleFullscreen()
   {
     _isFullscreen = true;
     SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
+    SDL_ShowCursor(false);
   }
   else
   {
     _isFullscreen = false;
     SDL_SetWindowFullscreen(_window, 0);
+    SDL_ShowCursor(true);
   }
 }
 
@@ -177,7 +178,10 @@ void GraphicsDevice::toggleVsync()
   }
 }
 
-
+void GraphicsDevice::showCursor(bool visible)
+{
+  SDL_ShowCursor((visible) ? SDL_ENABLE : SDL_DISABLE);
+}
 
 void GraphicsDevice::close()
 {
