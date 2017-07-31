@@ -2,11 +2,7 @@
 #include <windows.h>
 #endif
 
-#include <cmath>
-#include <stdlib.h>
-#include <time.h>
 #include <iostream>
-#include "src/texture.h"
 #include "src/Game.h"
 #include "src/Loader.h"
 
@@ -16,7 +12,7 @@ int main(int argc, char** args)
 {
   // Hide console in windows
   #ifdef _WIN32
-  // ShowWindow(GetConsoleWindow(), SW_HIDE);
+   ShowWindow(GetConsoleWindow(), SW_HIDE);
   #endif
 
   vector<string> attributes;
@@ -40,9 +36,8 @@ int main(int argc, char** args)
   data[0] = (data[0] > 1920 || data[0] < 1) ? 1366 : data[0];
   data[1] = (data[1] > 1920 || data[1] < 1) ? 768 : data[1];
 
-
-  srand(time(NULL));
   Game game("NEngine", data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
   game.run();
+
   return 0;
 }

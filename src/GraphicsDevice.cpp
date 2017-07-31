@@ -142,11 +142,13 @@ void GraphicsDevice::toggleFullscreen()
   {
     _isFullscreen = true;
     SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
+    SDL_ShowCursor(false);
   }
   else
   {
     _isFullscreen = false;
     SDL_SetWindowFullscreen(_window, 0);
+    SDL_ShowCursor(true);
   }
 }
 

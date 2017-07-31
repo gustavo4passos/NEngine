@@ -1,7 +1,10 @@
 #include "Hero.h"
 #include <vector>
+#include "Camera.h"
 #include "GraphicEngine.h"
 #include "InputHandler.h"
+#include "PhysicsEngine.h"
+#include "World.h"
 
 Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, float speed,  Shader* shader, float framesx, float framesy)
 : _width(width), _height(height), _speed(speed), _framesx(framesx), _framesy(framesy), _position(Vector2D(x, y)), _velocity(Vector2D(0.f, 0.f)), _currentVelocity(0.f, 0.f)
@@ -42,6 +45,14 @@ Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, flo
 
   shader->vertexAttribPointer("position", 2, 4, 0);
   shader->vertexAttribPointer("texcoord", 2, 4, 2);
+
+  // Set up collision box
+  _collisionBox.x = _position.x();
+  _collisionBox.y = _position.y();
+  _collisionBox.right = _position.x() + _width;
+  _collisionBox.bottom = _position.y() + _height;
+  _collisionBox.width = _width;
+  _collisionBox.height = _height;
 }
 
 void Hero::handleInput()
@@ -116,7 +127,34 @@ void Hero::move(unsigned int gameTime)
   unsigned int timeDifference = gameTime - _timeKeeper;
   _currentVelocity.setX(_currentVelocity.x() * (1 - timeDifference * _transitionSpeed) + _velocity.x() * (timeDifference * _transitionSpeed));
   _currentVelocity.setY(_currentVelocity.y() * (1 - timeDifference * _transitionSpeed) + _velocity.y() * (timeDifference * _transitionSpeed));
-  _position += _currentVelocity;
+
+  // Create a ghost in the new posisble position to check for collision
+  Vector2D tempPosition = _position + _currentVelocity;
+  // Make the box smaller than the character
+  int offsetx, offsety, widthReducer, heightReducer;
+  offsetx = 40;
+  offsety = 90;
+  widthReducer = 50;
+  heightReducer = 0;
+  Box tempBox = { 0, tempPosition.x() + offsetx, tempPosition.y() + offsety, (tempPosition.x() + _collisionBox.width) - widthReducer,
+                  (tempPosition.y() + _collisionBox.height) - heightReducer, _collisionBox.width, _collisionBox.height };
+  // If no collision is found, update the player postition to the new one
+  if(!PhysicsEngine::instance()->checkCollisionWithWorld(tempBox))
+  {
+    _position += _currentVelocity;
+    updateCollisionBox();
+  }
+
+  // Update camera follow coordinates
+  Camera::instance()->followPosition(_position);
+}
+
+void Hero::updateCollisionBox()
+{
+  _collisionBox.x = _position.x();
+  _collisionBox.y = _position.y();
+  _collisionBox.right = _collisionBox.x + _collisionBox.width;
+  _collisionBox.bottom = _collisionBox.y + _collisionBox.height;
 }
 
 void Hero::update(unsigned int gameTime)
@@ -124,7 +162,7 @@ void Hero::update(unsigned int gameTime)
   handleInput();
   animation(gameTime);
   move(gameTime);
-
+  updateCollisionBox();
   _timeKeeper = gameTime;
 }
 

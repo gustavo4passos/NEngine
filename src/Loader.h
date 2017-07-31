@@ -39,6 +39,7 @@ public:
   // Load World
   Tileset* loadTileset(const char* tsxFile);
   Layer* loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* shader);
+  void loadCollisionLayer(TiXmlElement* objectGroupElement, World* world);
   World* loadWorld(const char* tmxFile, Shader* shader);
 
 private:

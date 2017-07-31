@@ -248,24 +248,45 @@ Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* s
         tileset->tileWidth() * j                         , (tileset->tileHeight() * i) + tileset->tileHeight()   , stridex * tilex            , (stridey * tiley) + stridey
       };
 
+      // Create index data (4 indices per tile)
       GLuint indices[] = { index, index + 1, index + 2, index + 2, index + 3, index };
       index += 4;
 
+      // Insert tile data into the end of the array
       vbodata.insert(vbodata.end(), vertices, vertices + 16);
       ebodata.insert(ebodata.end(), indices, indices + 6);
     }
   }
 
+  // Upload the data to the ebo and vbo
   GLuint vao, vbo, ebo;
   vao = GraphicEngine::instance()->loadVao();
   vbo = GraphicEngine::instance()->loadToVbo(&vbodata[0], sizeof(GLfloat) * vbodata.size());
   ebo = GraphicEngine::instance()->loadToEbo(&ebodata[0], sizeof(GLuint) * ebodata.size());
 
+  // Enable vertex array attribs
   shader->vertexAttribPointer("position", 2, 4, 0);
   shader->vertexAttribPointer("texcoord", 2, 4, 2);
 
+  // Return freshly created layer
   Layer* layer = new Layer(width, height, layerName.c_str(), vao, vbo, ebo, ebodata.size());
   return layer;
+}
+
+void Loader::loadCollisionLayer(TiXmlElement* objectGroupElement, World* world)
+{
+  for(TiXmlElement* e = objectGroupElement->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+  {
+    float id, x, y, width, height;
+    e->QueryFloatAttribute("id", &id);
+    e->QueryFloatAttribute("x", &x);
+    e->QueryFloatAttribute("y", &y);
+    e->QueryFloatAttribute("width", &width);
+    e->QueryFloatAttribute("height", &height);
+
+    Box box = { id, x, y, x + width, y + height, width, height };
+    world->addCollisionBox(box);
+  }
 }
 
 World* Loader::loadWorld(const char* tmxFile, Shader* shader)
@@ -283,9 +304,17 @@ World* Loader::loadWorld(const char* tmxFile, Shader* shader)
   {
     TiXmlElement* root = doc.RootElement();
 
+
     Tileset* tileset;
     World* world;
     std::string tilesetFile;
+
+    // Gather map info
+    int width, height, tileWidth, tileHeight;
+    root->QueryIntAttribute("width", &width);
+    root->QueryIntAttribute("height", &height);
+    root->QueryIntAttribute("tilewidth", &tileWidth);
+    root->QueryIntAttribute("tileheight", &tileHeight);
 
     // Search for the tileset source on the tmx file
     for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
@@ -300,7 +329,7 @@ World* Loader::loadWorld(const char* tmxFile, Shader* shader)
     tileset = loadTileset(tilesetFile.c_str());
 
     // Use the tileset to create world
-    world = new World(tileset);
+    world = new World(tileset, width, height, tileWidth, tileHeight);
 
     // Load and add layers
     for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
@@ -308,6 +337,15 @@ World* Loader::loadWorld(const char* tmxFile, Shader* shader)
       if(e->Value() == std::string("layer"))
       {
         world->addLayer(loadLayer(e, tileset, shader));
+      }
+      else if(e->Value() == std::string("objectgroup"))
+      {
+        std::string checkAttribute;
+        e->QueryStringAttribute("name", &checkAttribute);
+        if(checkAttribute == "Collision layer")
+        {
+          loadCollisionLayer(e, world);
+        }
       }
     }
 

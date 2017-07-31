@@ -2,8 +2,7 @@
 #define HERO_H
 
 #include "GameObject.h"
-
-class Game;
+#include "World.h"
 
 class Hero : public GameObject
 {
@@ -13,12 +12,14 @@ public:
   virtual void update(unsigned int gameTime);
   virtual void draw();
 
-  friend class Game;
+  unsigned width() const { return _width; }
+  unsigned height() const { return _height; }
+  Box collisionBox() const { return _collisionBox; }
 
 private:
-
   void handleInput();
   void move(unsigned int gameTime);
+  void updateCollisionBox();
   void animation(unsigned int gameTime);
 
   unsigned int _width;
@@ -39,9 +40,11 @@ private:
   GLuint _ebo;
   Texture* _texture;
 
+  // Position attributes
   Vector2D _position;
   Vector2D _velocity;
   Vector2D _currentVelocity;
+  Box _collisionBox;
   float _speed;
 };
 

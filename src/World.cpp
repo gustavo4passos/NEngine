@@ -1,12 +1,14 @@
 #include "World.h"
 #include "GraphicEngine.h"
+#include "Hero.h"
 #include "Layer.h"
 #include "Loader.h"
+#include "PhysicsEngine.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Tileset.h"
 
-World::World(Tileset* tileset)
+World::World(Tileset* tileset, int width, int height, int tileWidth, int tileHeight) : _width(width), _height(height), _tileWidth(tileWidth), _tileHeight(tileHeight)
 {
   _tileset = tileset;
 }
@@ -36,4 +38,9 @@ World::~World()
 void World::addLayer(Layer* layer)
 {
   _layers.push_back(layer);
+}
+
+void World::addCollisionBox(Box box)
+{
+  _collisionLayer.push_back(box);
 }
