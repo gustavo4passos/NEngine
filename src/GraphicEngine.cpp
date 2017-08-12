@@ -1,6 +1,8 @@
+#include "Camera.h"
 #include "GraphicEngine.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "World.h"
 #include "../util/Vector2D.h"
 #include "../glm/glm.hpp"
 #include "../glm/gtc/matrix_transform.hpp"
@@ -15,6 +17,21 @@ GraphicEngine::GraphicEngine()
   // Set the current texture and shader to 0
   _currentShader = NULL;
   _currentTexture = 0;
+
+  // Load generic shaders
+  _boxShader = new Shader("../shaders/boxshader.vs", "../shaders/boxshader.fs");
+}
+
+void GraphicEngine::setUpOrtographicMatrix(GLfloat windowWidth, GLfloat windowHeight)
+{
+  ortho = glm::ortho(0.f, windowWidth, windowHeight, 0.f);
+}
+
+// Uses the current ortographic matrix in the CURRENT SHADER
+// The shader binding is not done inside the method so the caller can optimize various draw calls using the same matrix
+void GraphicEngine::useOrtographicMatrix()
+{
+  _currentShader->setMat4("ortho", glm::value_ptr(ortho));
 }
 
 void GraphicEngine::draw(GLuint vao, Texture* texture, GLuint first, GLuint count)
@@ -179,4 +196,47 @@ GLuint GraphicEngine::loadToEbo(GLuint data[], GLsizeiptr bytes)
   }
 
   return ebo;
+}
+
+// Draw a box in the screen
+// ATTENTION
+// This method is highly inneficient and should only be used for debugging purposes
+void GraphicEngine::drawBox(Box box, GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+  // Generate temprary vao to draw box;
+  GLuint vao, vbo;
+  vao = loadVao();
+
+  // Generate box vbo data
+  GLfloat vertices[] =
+  {
+    box.x, box.y,
+    box.right, box.y,
+    box.right, box.bottom,
+    box.x, box.bottom
+  };
+
+  // Load data into memory
+  vbo = loadToVbo(vertices, sizeof(vertices));
+  glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+  // Link data to box shader
+  this->useShader(this->_boxShader);
+  this->_boxShader->vertexAttribPointer("position", 2, 0, 0);
+  this->_boxShader->setUniform4f("rectColor", r, g, b, a);
+
+  this->useOrtographicMatrix();
+  printf("GRAPHIC ENGINE ERROR: DRAW BOX METHOD: Fix camera issue!\n");
+  glm::mat4 camera = glm::translate(glm::mat4(), glm::vec3(Camera::instance()->x(), Camera::instance()->y(), 0.f));
+  _currentShader->setMat4("camera", glm::value_ptr(camera));
+
+  // Draw
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+  // Delete buffers
+  glBindVertexArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glDeleteVertexArrays(1, &vao);
+  glDeleteBuffers(1, &vbo);
 }

@@ -102,8 +102,22 @@ void Shader::setUniform1f(const char* uniformName, GLfloat value)
   }
   else
   {
-    printf("Uniform %s location %i\n", uniformName, value);
     glUniform1f(uniformLocation, value);
+  }
+}
+
+// Load a 4 floats into memory
+void Shader::setUniform4f(const char* uniformName, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+{
+  GLuint uniformLocation = glGetUniformLocation(_id, uniformName);
+  // If unable to find uniform
+  if(uniformLocation < 0)
+  {
+    printf("OPENGL SHADER ERROR: Unable to find uniform. %s\n", uniformName);
+  }
+  else
+  {
+    glUniform4f(uniformLocation, x, y, z, w);
   }
 }
 

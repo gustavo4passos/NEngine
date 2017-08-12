@@ -12,7 +12,7 @@ int main(int argc, char** args)
 {
   // Hide console in windows
   #ifdef _WIN32
-   ShowWindow(GetConsoleWindow(), SW_HIDE);
+   //ShowWindow(GetConsoleWindow(), SW_HIDE);
   #endif
 
   vector<string> attributes;

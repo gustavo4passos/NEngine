@@ -22,6 +22,15 @@ void World::draw()
   }
 }
 
+void World::drawOverlay()
+{
+  _tileset->use();
+  for(int i = 0; i < _overlayLayers.size(); i++)
+  {
+    _overlayLayers[i]->draw();
+  }
+}
+
 World::~World()
 {
   // Clean memory
@@ -31,13 +40,24 @@ World::~World()
   for(std::vector<Layer*>::iterator it = _layers.begin(); it != _layers.end(); it++)
   {
     delete *it;
-    * it = NULL;
+    *it = NULL;
+  }
+
+  for(std::vector<Layer*>::iterator it = _overlayLayers.begin(); it != _overlayLayers.end(); ++it)
+  {
+    delete *it;
+    *it = NULL;
   }
 }
 
 void World::addLayer(Layer* layer)
 {
   _layers.push_back(layer);
+}
+
+void World::addOverlayLayer(Layer* layer)
+{
+  _overlayLayers.push_back(layer);
 }
 
 void World::addCollisionBox(Box box)

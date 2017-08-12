@@ -53,3 +53,51 @@ bool PhysicsEngine::checkCollisionWithWorld(Box player)
   // No collision was detected
   return false;
 }
+
+Vector2D PhysicsEngine::detectCollision(Box originalPosition, Box destination)
+{
+  Box furthestPosition = { originalPosition.id, originalPosition.x, originalPosition.y, originalPosition.right, originalPosition.bottom, originalPosition.width, originalPosition.height };
+
+  Vector2D movementToTry = Vector2D(destination.x, destination.y) - Vector2D(originalPosition.x, originalPosition.y);
+  int steps = int(movementToTry.length() * 2) + 1;
+  Vector2D oneStep = movementToTry / steps;
+
+  Box finalPosition = furthestPosition;
+  for(int i = 1; i <= steps; i++)
+  {
+    finalPosition = furthestPosition;
+    furthestPosition.x = originalPosition.x + (oneStep.x() * i);
+    furthestPosition.y = originalPosition.y + (oneStep.y() * i);
+    furthestPosition.right = originalPosition.right + (oneStep.x() * i);
+    furthestPosition.bottom = originalPosition.bottom + (oneStep.y() * i);
+
+    if(checkCollisionWithWorld(furthestPosition))
+    {
+      bool diagonalMove = (movementToTry.x() != 0 && movementToTry.y() != 0) ? true : false;
+      if(diagonalMove)
+      {
+        int stepsLeft = steps - i - 1;
+
+        Vector2D remainingHorizontalMovement(oneStep.x() * stepsLeft, 0);
+        Box finalHorizontalMovement = finalPosition;
+        finalHorizontalMovement.x += remainingHorizontalMovement.x();
+        finalHorizontalMovement.right += remainingHorizontalMovement.x();
+        Vector2D finalHorizontalMovementVector = detectCollision(finalPosition, finalHorizontalMovement);
+
+        Vector2D remainingVerticalMovement(0, oneStep.y() * stepsLeft);
+        Box finalVerticalMovement = finalPosition;
+        finalVerticalMovement.y += remainingVerticalMovement.y();
+        finalVerticalMovement.bottom += remainingVerticalMovement.y();
+        Vector2D finalVerticalMovementVector = detectCollision(finalPosition, finalVerticalMovement);
+
+        finalPosition.x = finalHorizontalMovementVector.x();
+        finalPosition.right += finalPosition.x;
+        finalPosition.y = finalVerticalMovementVector.y();
+        finalPosition.bottom += finalPosition.y;
+      }
+      break;
+    }
+  }
+
+  return Vector2D(finalPosition.x, finalPosition.y);
+}

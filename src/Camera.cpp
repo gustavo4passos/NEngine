@@ -3,8 +3,9 @@
 
 Camera* Camera::_instance = 0;
 
-Camera::Camera() : _position(Vector2D(0.f, 0.f)), _velocity(Vector2D(0.f, 0.f)), _followPosition(Vector2D(0.f, 0.f)), _screenCenter(Vector2D(0, 0))
+Camera::Camera() : _position(Vector2D(0.f, 0.f)), _velocity(Vector2D(0.f, 0.f)), _followPosition(Vector2D(0.f, 0.f)), _screenCenter(Vector2D(0.f, 0.f)), _currentVelocity(Vector2D(0.f, 0.f))
 {
+  _weightedAcceleration = 0.15f;
 }
 
 void Camera::setScreenLimits(int top, int right, int bottom, int left, float centerx, float centery)
@@ -18,7 +19,8 @@ void Camera::setScreenLimits(int top, int right, int bottom, int left, float cen
 
 void Camera::followPosition(Vector2D position)
 {
-  _followPosition = position - _screenCenter;
+  _velocity = (position) - _followPosition - _screenCenter;
+  _followPosition += _velocity;
 }
 
 void Camera::update()

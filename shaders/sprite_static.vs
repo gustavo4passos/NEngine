@@ -9,5 +9,5 @@ out vec2 TexCoord;
 void main()
 {
   TexCoord = texcoord;
-  gl_Position = ortho * camera * vec4(position, 0, 1.0);
+  gl_Position = ortho * camera * vec4(position, 0.0, 1.0);
 }

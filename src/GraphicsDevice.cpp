@@ -1,4 +1,4 @@
-#include "GraphicsDevice.h"
+  #include "GraphicsDevice.h"
 
 GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync, bool alphaEnabled)
  : _windowWidth(windowWidth), _windowHeight(windowHeight), _isFullscreen(fullscreen), _vsync(vsync)

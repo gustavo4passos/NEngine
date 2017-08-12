@@ -6,6 +6,7 @@
 struct Box;
 class Hero;
 class World;
+class Vector2D;
 
 class PhysicsEngine
 {
@@ -28,6 +29,7 @@ public:
   // Checks for collision between player and world
   bool checkCollision(Box a, Box b);
   bool checkCollisionWithWorld(Box player);
+  Vector2D detectCollision(Box originalPosition, Box destination);
 
 private:
   PhysicsEngine();
@@ -36,6 +38,8 @@ private:
   // Reference to the player and the world for physics calculation
   Hero* _hero;
   World* _world;
+
+
 };
 
 #endif

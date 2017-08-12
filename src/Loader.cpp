@@ -186,8 +186,16 @@ Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* s
   layerElement->QueryIntAttribute("width", &width);
   layerElement->QueryIntAttribute("height", &height);
 
-  // Get layer data in a string
-  TiXmlNode* dataNode = layerElement->FirstChildElement()->FirstChild();
+  // Search for the layer data in a string
+  TiXmlNode* dataNode;
+  for(TiXmlElement* e = layerElement->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+  {
+    if(e->Value() == std::string("data"))
+    {
+      dataNode = e->FirstChild();
+      break;
+    }
+  }
   TiXmlText* dataNodeText = dataNode->ToText();
   std::string data = dataNodeText->Value();
 
@@ -336,7 +344,22 @@ World* Loader::loadWorld(const char* tmxFile, Shader* shader)
     {
       if(e->Value() == std::string("layer"))
       {
-        world->addLayer(loadLayer(e, tileset, shader));
+        // Check if the layer has any properties
+        if(e->FirstChildElement()->Value() == std::string("properties"))
+        {
+          TiXmlElement* layerProperties = e->FirstChildElement();
+          for(TiXmlElement* properties = layerProperties->FirstChildElement(); properties != NULL; properties = properties->NextSiblingElement())
+          {
+            if(properties->Attribute("value") == std::string("overlay"))
+            {
+              world->addOverlayLayer(loadLayer(e, tileset, shader));
+            }
+          }
+        }
+        else
+        {
+          world->addLayer(loadLayer(e, tileset, shader));
+        }
       }
       else if(e->Value() == std::string("objectgroup"))
       {

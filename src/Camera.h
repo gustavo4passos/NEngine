@@ -33,7 +33,9 @@ private:
   // Camera position
   Vector2D _position;
   Vector2D _velocity;
+  Vector2D _currentVelocity;
   Vector2D _followPosition;
+  float _weightedAcceleration;
 
   // Screen limits (in pixels)
   Vector2D _screenCenter;
