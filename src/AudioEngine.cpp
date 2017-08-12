@@ -98,8 +98,8 @@ int AudioEngine::createSource(float gain, float pitch, bool looping, float x, fl
     alSource3f(source, AL_VELOCITY, 0.f, 0.f, 0.f);
     alSource3f(source, AL_POSITION, x, y, z);
     // Set up if the source is loopin based on argument
-    ALenum looping = (looping) ? AL_TRUE : AL_FALSE;
-    alSourcei(source, AL_LOOPING, looping);
+    ALenum isLooping = (looping) ? AL_TRUE : AL_FALSE;
+    alSourcei(source, AL_LOOPING, isLooping);
 
     // Check for errors
     ALenum error = alGetError();

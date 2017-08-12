@@ -26,7 +26,7 @@ Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, flo
   _timeKeeper = 0;
 
   // Transition speed to get to desired speed
-  _transitionSpeed = 0.015;
+  _transitionSpeed = 0.30;
 
   // Get the tex stride for each frame
   _frameStridew = ((_texture->width() / framesx) / _texture->width());
@@ -46,13 +46,21 @@ Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, flo
   shader->vertexAttribPointer("position", 2, 4, 0);
   shader->vertexAttribPointer("texcoord", 2, 4, 2);
 
+  // Make the box smaller than the character (!!FIXME)
+  int offsetx, offsety, widthReducer, heightReducer;
+  offsetx = 40;
+  offsety = 40;
+  widthReducer = 80;
+  heightReducer = 70;
+
   // Set up collision box
-  _collisionBox.x = _position.x();
-  _collisionBox.y = _position.y();
+  _collisionBox.x = _position.x() + offsetx;
+  _collisionBox.y = _position.y() + offsety;
+  _collisionBox.width = _width - widthReducer;
+  _collisionBox.height = _height - heightReducer;
   _collisionBox.right = _position.x() + _width;
   _collisionBox.bottom = _position.y() + _height;
-  _collisionBox.width = _width;
-  _collisionBox.height = _height;
+
 }
 
 void Hero::handleInput()
@@ -124,45 +132,45 @@ void Hero::animation(unsigned int gameTime)
 
 void Hero::move(unsigned int gameTime)
 {
+  // Time difference between the current and previous frame
   unsigned int timeDifference = gameTime - _timeKeeper;
-  _currentVelocity.setX(_currentVelocity.x() * (1 - timeDifference * _transitionSpeed) + _velocity.x() * (timeDifference * _transitionSpeed));
-  _currentVelocity.setY(_currentVelocity.y() * (1 - timeDifference * _transitionSpeed) + _velocity.y() * (timeDifference * _transitionSpeed));
+
+  // Accelerates smoothly
+  _currentVelocity.setX(_transitionSpeed * _velocity.x() + (1 - _transitionSpeed) * _currentVelocity.x());
+  _currentVelocity.setY(_transitionSpeed * _velocity.y() + (1 - _transitionSpeed) * _currentVelocity.y());
 
   // Create a ghost in the new posisble position to check for collision
-  Vector2D tempPosition = _position + _currentVelocity;
-  // Make the box smaller than the character
+  // Vector2D tempPosition = _position + _currentVelocity;
+  Box tempBox = { 0, _collisionBox.x, _collisionBox.y, _collisionBox.right, _collisionBox.bottom, _collisionBox.width, _collisionBox.height };
+  tempBox.x += _currentVelocity.x();
+  tempBox.right += _currentVelocity.x();
+  tempBox.y += _currentVelocity.y();
+  tempBox.bottom += _currentVelocity.y();
+
+  Vector2D tempPosition = PhysicsEngine::instance()->detectCollision(_collisionBox, tempBox);
+  _collisionBox.x = tempPosition.x();
+  _collisionBox.right = tempPosition.x() + _collisionBox.width;
+  _collisionBox.y = tempPosition.y();
+  _collisionBox.bottom = tempPosition.y() + _collisionBox.height;
+
+  // Make the box smaller than the character (!!FIXME)
   int offsetx, offsety, widthReducer, heightReducer;
   offsetx = 40;
-  offsety = 90;
-  widthReducer = 50;
-  heightReducer = 0;
-  Box tempBox = { 0, tempPosition.x() + offsetx, tempPosition.y() + offsety, (tempPosition.x() + _collisionBox.width) - widthReducer,
-                  (tempPosition.y() + _collisionBox.height) - heightReducer, _collisionBox.width, _collisionBox.height };
-  // If no collision is found, update the player postition to the new one
-  if(!PhysicsEngine::instance()->checkCollisionWithWorld(tempBox))
-  {
-    _position += _currentVelocity;
-    updateCollisionBox();
-  }
+  offsety = 70;
+
+  _position.setX(_collisionBox.x - offsetx);
+  _position.setY(_collisionBox.y - offsety);
 
   // Update camera follow coordinates
   Camera::instance()->followPosition(_position);
 }
 
-void Hero::updateCollisionBox()
-{
-  _collisionBox.x = _position.x();
-  _collisionBox.y = _position.y();
-  _collisionBox.right = _collisionBox.x + _collisionBox.width;
-  _collisionBox.bottom = _collisionBox.y + _collisionBox.height;
-}
 
 void Hero::update(unsigned int gameTime)
 {
   handleInput();
   animation(gameTime);
   move(gameTime);
-  updateCollisionBox();
   _timeKeeper = gameTime;
 }
 

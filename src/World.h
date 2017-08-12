@@ -11,10 +11,10 @@ class Tileset;
 struct Box
 {
   int id;
-  int x;
-  int y;
-  int right;
-  int bottom;
+  float x;
+  float y;
+  float right;
+  float bottom;
   int width;
   int height;
 };
@@ -41,7 +41,8 @@ public:
 
   // Draw layers to the screen
   void draw();
-  
+  void drawOverlay();
+
 private:
   unsigned _width;
   unsigned _height;
@@ -53,11 +54,23 @@ private:
 
   // Stores the layers objects
   std::vector<Layer*> _layers;
+  // Layers that will cover the characters
+  // For a layers to be read as overlay it needs to have a "value" property of "overlay" insisde a properties element
+  /* Ex:
+    <layer>
+      <properties>
+        <property name="doesn`t matter" value="overlay"/>
+      </properties>
+      <data>
+      ...
+    </layer>*/
+  std::vector<Layer*> _overlayLayers;
 
   std::vector<Box> _collisionLayer;
 
   // Add layer
   void addLayer(Layer* layer);
+  void addOverlayLayer(Layer* layer);
   void addCollisionBox(Box box);
 };
 
