@@ -4,7 +4,7 @@
 #include <vector>
 
 struct Box;
-class Hero;
+class Player;
 class World;
 class Vector2D;
 
@@ -22,7 +22,7 @@ public:
   }
 
   // Add reference to player and world
-  void connectToTheWorld(World* world, Hero* hero);
+  void connectToTheWorld(World* world, Player* player);
   // Remove referencres
   void disconnect();
 
@@ -36,7 +36,7 @@ private:
   static PhysicsEngine* _instance;
 
   // Reference to the player and the world for physics calculation
-  Hero* _hero;
+  Player* _player;
   World* _world;
 
 

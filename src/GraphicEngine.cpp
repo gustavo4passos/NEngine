@@ -4,10 +4,6 @@
 #include "Texture.h"
 #include "World.h"
 #include "../util/Vector2D.h"
-#include "../glm/glm.hpp"
-#include "../glm/gtc/matrix_transform.hpp"
-#include "../glm/gtx/transform.hpp"
-#include "../glm/gtc/type_ptr.hpp"
 
 //Create the only instance
 GraphicEngine* GraphicEngine::_instance = NULL;

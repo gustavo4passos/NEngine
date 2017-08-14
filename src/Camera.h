@@ -25,11 +25,16 @@ public:
 
   void followPosition(Vector2D position);
   void update();
-  void setScreenLimits(int left, int right, int top, int bottom, float centerx, float centery);
+  void setScreenResolution(int width, int height) { _screenWidth = width; _screenHeight = height; }
+  void setMapLimits(int left, int right, int top, int bottom);
+  void focusAt(int x, int y, int objectWidth, int objectHeight);
 
 private:
   static Camera* _instance;
 
+  // Screen info
+  int _screenWidth;
+  int _screenHeight;
   // Camera position
   Vector2D _position;
   Vector2D _velocity;

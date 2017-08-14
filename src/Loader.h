@@ -5,7 +5,7 @@
 #include <vector>
 
 class Background;
-class Hero;
+class Player;
 class Layer;
 class Shader;
 class Tileset;
@@ -30,8 +30,8 @@ public:
   // Ex: If the string vector position [2] is "width", the vector<int> data[2] will store the attribute
   void loadConfig(const char* file, std::string elementName, std::vector<std::string> attributes, std::vector<int>* data);
 
-  // Load a hero object from a xml file
-  Hero* loadHero(const char* file, Shader* shader);
+  // Load a player object from a xml file
+  Player* loadPlayer(const char* file, Shader* shader);
 
   // Load a Background image from a xml file
   Background* loadBackground(const char* file, Shader* shader);
@@ -40,7 +40,7 @@ public:
   Tileset* loadTileset(const char* tsxFile);
   Layer* loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* shader);
   void loadCollisionLayer(TiXmlElement* objectGroupElement, World* world);
-  World* loadWorld(const char* tmxFile, Shader* shader);
+  World* loadWorld(const char* loadFile, Shader* shader);
 
 private:
   static Loader* _instance;

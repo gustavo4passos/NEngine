@@ -16,6 +16,7 @@ public:
     return _instance;
   }
   void getAttributes(std::string file, std::string elementName, std::vector<std::string> attributes, std::vector<int>* data);
+  
 private:
   static XMLParser* _instance;
 };

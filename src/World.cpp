@@ -1,6 +1,6 @@
 #include "World.h"
 #include "GraphicEngine.h"
-#include "Hero.h"
+#include "Player.h"
 #include "Layer.h"
 #include "Loader.h"
 #include "PhysicsEngine.h"

@@ -19,7 +19,7 @@ struct Box
   int height;
 };
 
-class Hero;
+class Player;
 
 class World
 {

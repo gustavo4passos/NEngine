@@ -5,6 +5,7 @@ AudioDevice::AudioDevice() : _audioDevice(NULL), _audioContext(NULL)
 {
   // Open the first audio device available
   _audioDevice = alcOpenDevice(NULL);
+  
   // Checks if the audio device was opened successfully
   if(!_audioDevice)
   {
