@@ -14,8 +14,13 @@ void GameStateMachine::update(unsigned gameTime)
   if(InputHandler::instance()->keyDown(SDL_SCANCODE_O) &&
      InputHandler::instance()->keyDown(SDL_SCANCODE_P))
    {
-     pushState(new MapGameState("../data/loaddata.xml"));
+     pushState(new MapGameState("../data/testState2.xml"));
    }
+   if(InputHandler::instance()->keyDown(SDL_SCANCODE_O) &&
+      InputHandler::instance()->keyDown(SDL_SCANCODE_I))
+      {
+        pushState(new MapGameState("../data/loaddata.xml"));
+      }
   if(!_gameStates.empty())
   {
     _gameStates.back()->update(gameTime);

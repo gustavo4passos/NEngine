@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 
+class Button;
 class Player;
 class Shader;
 class World;
@@ -25,6 +26,7 @@ private:
   // Draw shaders
   Shader* _staticShader;
 
+  Button* _button;
   Player* _player;
   World* _world;
 

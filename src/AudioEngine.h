@@ -2,6 +2,7 @@
 #define AUDIOENGINE_H
 
 #include <vector>
+#include <string>
 #include "AudioDevice.h"
 
 class AudioEngine
@@ -19,10 +20,12 @@ public:
   // Load a buffer and return it's position on the buffer array
   int loadWAV(const char* path, bool stereo, unsigned int format8or16);
   int loadMP3(const char* path);
+
   // Create a sound source, with a 3D position. Returns -1 if unable to createe source
   int createSource(float gain = 1.f, float pitch = 1.f, bool looping = false, float x = 0.f, float y = 0.f, float z = 0.f);
   void deleteSource(int source);
   void deleteBuffer(int buffer);
+
   // Play loaded audio
   void play(int source, int buffer);
   void stop(int source);
@@ -30,6 +33,8 @@ public:
   // Position a source in 3D space
   void sourcePosition(int source, float x = 0.f, float y = 0.f, float z = 0.f);
 
+  // Get string error from ALenum
+  std::string getErrorString(ALenum error);
   // Clean loaded data
   void clean();
 

@@ -47,7 +47,7 @@ int AudioEngine::loadWAV(const char* path, bool stereo, unsigned int format8or16
   ALenum error = alGetError();
   if(error != AL_NO_ERROR)
   {
-    printf("AUDIO ENGINE ERROR: OpenAL error: Could not load audio buffer. Error code: %i\n", error);
+    printf("AUDIO ENGINE ERROR: OpenAL error: Could not load audio buffer. Error code: %s\n", getErrorString(error).c_str());
     SDL_FreeWAV(wavBuffer);
     return -1;
   }
@@ -149,6 +149,12 @@ void AudioEngine::deleteBuffer(int buffer)
   else
   {
     alDeleteBuffers(1, &_buffers[buffer]);
+
+    ALenum error = alGetError();
+    if(error != AL_NO_ERROR)
+    {
+      printf("AUDIO ENGINE ERROR: Error while deleting buffer. Error: %s\n", getErrorString(error).c_str());
+    }
   }
 }
 
@@ -162,6 +168,33 @@ void AudioEngine::sourcePosition(int source, float x, float y, float z)
   {
     alSource3f(_sources[source], AL_POSITION, x, y, z);
   }
+}
+
+std::string AudioEngine::getErrorString(ALenum error)
+{
+  std::string errorString;
+  if(error == AL_INVALID_VALUE)
+  {
+    errorString = "AL_INVALID_VALUE";
+  }
+  else if(error == AL_OUT_OF_MEMORY)
+  {
+    errorString = "AL_OUT_OF_MEMORY";
+  }
+  else if(error == AL_INVALID_ENUM)
+  {
+    errorString = "AL_INVALID_ENUM";
+  }
+  else if(error == AL_INVALID_OPERATION)
+  {
+    errorString = "AL_INVALID_OPERATION";
+  }
+  else
+  {
+    errorString = "AUDIO ENGINE ERROR: getErrorString error: ALenum not registered.";
+  }
+
+  return errorString;
 }
 
 

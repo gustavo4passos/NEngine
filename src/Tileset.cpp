@@ -17,7 +17,7 @@ void Tileset::use()
 
 Tileset::~Tileset()
 {
-  
+
   delete _texture;
   _texture = NULL;
 }

@@ -1,6 +1,7 @@
 #include "MapGameState.h"
 
 #include "AudioEngine.h"
+#include "Button.h"
 #include "Camera.h"
 #include "GraphicEngine.h"
 #include "InputHandler.h"
@@ -14,6 +15,7 @@ MapGameState::MapGameState(const char* loadFile)
 {
   _player = Loader::instance()->loadPlayer(loadFile);
   _world = Loader::instance()->loadWorld(loadFile);
+  _button = new Button("../resources/sprites/button-test.png", 200, 200, 300, 75, 2);
 }
 
 void MapGameState::start()
@@ -49,12 +51,15 @@ void MapGameState::update(unsigned int gameTime)
 {
   handleInput();
   _player->update(gameTime);
+  _button->update(gameTime);
   Camera::instance()->update();
 }
 
 void MapGameState::draw()
 {
+
   _world->draw();
   _player->draw();
   _world->drawOverlay();
+   _button->draw();
 }
