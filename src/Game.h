@@ -8,12 +8,13 @@
 #include "../glm/gtx/transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 
-// A temp declarations, actual classes will be included inside the .cpp
-class Hero;
-class Shader;
 class Background;
-class Tileset;
+class GameState;
+class GameStateMachine;
 class Layer;
+class Player;
+class Shader;
+class Tileset;
 class World;
 
 class Game
@@ -31,7 +32,7 @@ public:
 
 private:
   void handleInput();
-  void update(unsigned int GameTime);
+  void update(unsigned int gameTime);
   void draw();
 
   GraphicsDevice* _graphicsDevice;
@@ -41,14 +42,8 @@ private:
   Shader* defaultShader;
   Shader* staticShader;
 
-  // Game characters
-  Hero* _hero;
+  GameStateMachine* _gameStateMachine;
 
-  // Game world
-  World* _world;
-
-  // Matrices
-  glm::mat4 ortho;
 
   bool _running;
 };

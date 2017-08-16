@@ -1,5 +1,7 @@
-#include <stdio.h>
 #include "Texture.h"
+
+#include <stdio.h>
+#include "GraphicEngine.h"
 
 Texture::Texture(std::string path, bool linearFiltering, bool mirrorRepeat)
 {
@@ -94,6 +96,5 @@ void Texture::use()
 Texture::~Texture()
 {
   // Unbinds texture, and delete it from video memory
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glDeleteTextures(1, &_id);
+  GraphicEngine::instance()->deleteTexture(&_id);
 }

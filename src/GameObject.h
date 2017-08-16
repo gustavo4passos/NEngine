@@ -14,14 +14,13 @@ public:
   virtual void draw() = 0;
 
 protected:
-  unsigned int _width;
-  unsigned int _height;
+  unsigned _width;
+  unsigned _height;
 
   GLuint _vao;
   GLuint _vbo;
   GLuint _ebo;
   Texture* _texture;
-
 };
 
 #endif

@@ -5,7 +5,7 @@
 #include "../tinyxml/tinystr.h"
 #include "Background.h"
 #include "GraphicEngine.h"
-#include "Hero.h"
+#include "Player.h"
 #include "Layer.h"
 #include "Shader.h"
 #include "Tileset.h"
@@ -55,7 +55,7 @@ void Loader::loadConfig(const char* file, std::string elementName, std::vector<s
   }
 }
 
-Hero* Loader::loadHero(const char* file, Shader* shader)
+Player* Loader::loadPlayer(const char* file)
 {
   TiXmlDocument doc(file);
   bool success = doc.LoadFile();
@@ -67,18 +67,18 @@ Hero* Loader::loadHero(const char* file, Shader* shader)
   else
   {
     TiXmlElement* root = doc.RootElement();
-    TiXmlElement* heroElement = NULL;
+    TiXmlElement* playerElement = NULL;
     for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
     {
       if(e->Value() == std::string("HERO"))
       {
-        heroElement = e;
+        playerElement = e;
         break;
       }
     }
 
     // Gets the data element
-    TiXmlElement* data = heroElement->FirstChildElement();
+    TiXmlElement* data = playerElement->FirstChildElement();
 
     // Retrieve data
     const char* sprite = data->Attribute("sprite");
@@ -92,9 +92,9 @@ Hero* Loader::loadHero(const char* file, Shader* shader)
     data->Attribute("framesx", &framesx);
     data->Attribute("framesy", &framesy);
 
-    // Creates and return hero based on data
-    Hero* hero = new Hero(sprite, x, y, width, height, speed, shader, framesx, framesy);
-    return hero;
+    // Creates and return player based on data
+    Player* player = new Player(sprite, x, y, width, height, speed, framesx, framesy);
+    return player;
   }
 }
 
@@ -135,7 +135,7 @@ Background* Loader::loadBackground(const char* file, Shader* shader)
       data->Attribute("width", &width);
       data->Attribute("height", &height);
 
-      // Creates and return hero based on data
+      // Creates and return player based on data
       Background* background = new Background(file, shader, width, height);
       return background;
     }
@@ -175,7 +175,7 @@ Tileset* Loader::loadTileset(const char* tsxFile)
   }
 }
 
-Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* shader)
+Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset)
 {
   std::string layerName;
   int width;
@@ -273,8 +273,8 @@ Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* s
   ebo = GraphicEngine::instance()->loadToEbo(&ebodata[0], sizeof(GLuint) * ebodata.size());
 
   // Enable vertex array attribs
-  shader->vertexAttribPointer("position", 2, 4, 0);
-  shader->vertexAttribPointer("texcoord", 2, 4, 2);
+  GraphicEngine::instance()->staticShader()->vertexAttribPointer("position", 2, 4, 0);
+  GraphicEngine::instance()->staticShader()->vertexAttribPointer("texcoord", 2, 4, 2);
 
   // Return freshly created layer
   Layer* layer = new Layer(width, height, layerName.c_str(), vao, vbo, ebo, ebodata.size());
@@ -297,82 +297,125 @@ void Loader::loadCollisionLayer(TiXmlElement* objectGroupElement, World* world)
   }
 }
 
-World* Loader::loadWorld(const char* tmxFile, Shader* shader)
+World* Loader::loadWorld(const char* loadFile)
 {
 
-  TiXmlDocument doc(tmxFile);
-  bool success = doc.LoadFile();
-
-  if(!success)
+  TiXmlDocument loadFileDoc(loadFile);
+  bool loadFileLoaded = loadFileDoc.LoadFile();
+  if(!loadFileLoaded)
   {
-    printf("LOADER ERROR: Unable to load world. File: %s Error: %s\n", tmxFile, doc.ErrorDesc());
+    printf("LOADER ERROR: Unable to load world config file. File: %s Error: %s\n", loadFile, loadFileDoc.ErrorDesc());
     return NULL;
   }
   else
   {
-    TiXmlElement* root = doc.RootElement();
+    TiXmlElement* configRoot = loadFileDoc.RootElement();
+    TiXmlElement* mapElement = NULL;
 
-
-    Tileset* tileset;
-    World* world;
-    std::string tilesetFile;
-
-    // Gather map info
-    int width, height, tileWidth, tileHeight;
-    root->QueryIntAttribute("width", &width);
-    root->QueryIntAttribute("height", &height);
-    root->QueryIntAttribute("tilewidth", &tileWidth);
-    root->QueryIntAttribute("tileheight", &tileHeight);
-
-    // Search for the tileset source on the tmx file
-    for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+    for(TiXmlElement* e = configRoot->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
     {
-      if(e->Value() == std::string("tileset"))
-      {
-        e->QueryStringAttribute("source", &tilesetFile);
-      }
+        if(e->Value() == std::string("MAP"))
+        {
+          mapElement = e;
+          break;
+        }
     }
 
-    // Load tileset from tsx file
-    tileset = loadTileset(tilesetFile.c_str());
-
-    // Use the tileset to create world
-    world = new World(tileset, width, height, tileWidth, tileHeight);
-
-    // Load and add layers
-    for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+    // If the Map element wasn't found, return NULL
+    if(mapElement == NULL)
     {
-      if(e->Value() == std::string("layer"))
+      printf("LOADER ERROR: Unable to find map element on config file. File: %s\n", loadFile);
+      return NULL;
+    }
+    else
+    {
+      TiXmlElement* mapFileData = mapElement->FirstChildElement();
+      std::string tmxFile;
+      mapFileData->QueryStringAttribute("file", &tmxFile);
+
+      // If the string is empty, the path of the tmx file could not be found
+      if(tmxFile == "")
       {
-        // Check if the layer has any properties
-        if(e->FirstChildElement()->Value() == std::string("properties"))
+        printf("LOADER ERROR: Unable to find map file path in xml config file! File: %s\n", tmxFile);
+        return NULL;
+      }
+      else
         {
-          TiXmlElement* layerProperties = e->FirstChildElement();
-          for(TiXmlElement* properties = layerProperties->FirstChildElement(); properties != NULL; properties = properties->NextSiblingElement())
-          {
-            if(properties->Attribute("value") == std::string("overlay"))
-            {
-              world->addOverlayLayer(loadLayer(e, tileset, shader));
-            }
-          }
+        TiXmlDocument doc(tmxFile);
+        bool success = doc.LoadFile();
+
+        if(!success)
+        {
+          printf("LOADER ERROR: Unable to load world. File: %s Error: %s\n", tmxFile.c_str(), doc.ErrorDesc());
+          return NULL;
         }
         else
         {
-          world->addLayer(loadLayer(e, tileset, shader));
-        }
-      }
-      else if(e->Value() == std::string("objectgroup"))
-      {
-        std::string checkAttribute;
-        e->QueryStringAttribute("name", &checkAttribute);
-        if(checkAttribute == "Collision layer")
-        {
-          loadCollisionLayer(e, world);
+          TiXmlElement* root = doc.RootElement();
+
+          Tileset* tileset;
+          World* world;
+          std::string tilesetFile;
+
+          // Gather map info
+          int width, height, tileWidth, tileHeight;
+          root->QueryIntAttribute("width", &width);
+          root->QueryIntAttribute("height", &height);
+          root->QueryIntAttribute("tilewidth", &tileWidth);
+          root->QueryIntAttribute("tileheight", &tileHeight);
+
+          // Search for the tileset source on the tmx file
+          for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+          {
+            if(e->Value() == std::string("tileset"))
+            {
+              e->QueryStringAttribute("source", &tilesetFile);
+            }
+          }
+
+          // Load tileset from tsx file
+          tileset = loadTileset(tilesetFile.c_str());
+
+          // Use the tileset to create world
+          world = new World(tileset, width, height, tileWidth, tileHeight);
+
+          // Load and add layers
+          for(TiXmlElement* e = root->FirstChildElement(); e != NULL; e = e->NextSiblingElement())
+          {
+            if(e->Value() == std::string("layer"))
+            {
+              // Check if the layer has any properties
+              if(e->FirstChildElement()->Value() == std::string("properties"))
+              {
+                TiXmlElement* layerProperties = e->FirstChildElement();
+                for(TiXmlElement* properties = layerProperties->FirstChildElement(); properties != NULL; properties = properties->NextSiblingElement())
+                {
+                  if(properties->Attribute("value") == std::string("overlay"))
+                  {
+                    world->addOverlayLayer(loadLayer(e, tileset));
+                  }
+                }
+              }
+              else
+              {
+                world->addLayer(loadLayer(e, tileset));
+              }
+            }
+            else if(e->Value() == std::string("objectgroup"))
+            {
+              std::string checkAttribute;
+              e->QueryStringAttribute("name", &checkAttribute);
+              if(checkAttribute == "Collision layer")
+              {
+                loadCollisionLayer(e, world);
+              }
+            }
+          }
+
+          // Return freshly build world
+          return world;
         }
       }
     }
-
-    // Return freshly build world
-    return world;
   }
 }

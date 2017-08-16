@@ -1,5 +1,5 @@
 #include "PhysicsEngine.h"
-#include "Hero.h"
+#include "Player.h"
 #include "World.h"
 #include <stdio.h>
 
@@ -10,19 +10,19 @@ PhysicsEngine::PhysicsEngine()
 {
   // Start references as null. Call connectToTheWorld to anchor reference
   _world = NULL;
-  _hero = NULL;
+  _player = NULL;
 }
 
-void PhysicsEngine::connectToTheWorld(World* world, Hero* hero)
+void PhysicsEngine::connectToTheWorld(World* world, Player* player)
 {
   _world = world;
-  _hero = hero;
+  _player = player;
 }
 
 void PhysicsEngine::disconnect()
 {
   _world = NULL;
-  _hero = NULL;
+  _player = NULL;
 }
 
 bool PhysicsEngine::checkCollision(Box a, Box b)
@@ -40,7 +40,7 @@ bool PhysicsEngine::checkCollision(Box a, Box b)
 bool PhysicsEngine::checkCollisionWithWorld(Box player)
 {
   // Check if the engine is connected to a world
-  if(_world == NULL && _hero == NULL)
+  if(_world == NULL && _player == NULL)
   {
     printf("PHYSICS ENGINE ERROR: Unable to check collision with the world. Not connected to any world.\n (Need to call connecToTheWorld?)\n");
     return false;

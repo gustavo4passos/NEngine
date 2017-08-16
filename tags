@@ -667,9 +667,9 @@ GraphicEngine	.\src\GraphicEngine.cpp	/^GraphicEngine::GraphicEngine()$/;"	f	cla
 GraphicEngine	.\src\GraphicEngine.h	/^class GraphicEngine$/;"	c
 GraphicsDevice	.\src\GraphicsDevice.cpp	/^GraphicsDevice::GraphicsDevice(const char* title, int windowWidth, int windowHeight, int glMajorVersion, int glMinorVersion, bool fullscreen, bool vsync)$/;"	f	class:GraphicsDevice
 GraphicsDevice	.\src\GraphicsDevice.h	/^class GraphicsDevice$/;"	c
-HERO_H	.\src\Hero.h	2;"	d
-Hero	.\src\Hero.cpp	/^Hero::Hero(const char* textureFilePath, int width, int height, Shader* shader,  float framesw, float framesh) : _width(width), _height(height)$/;"	f	class:Hero
-Hero	.\src\Hero.h	/^class Hero : public GameObject$/;"	c
+HERO_H	.\src\Player.h	2;"	d
+Player	.\src\Player.cpp	/^Player::Player(const char* textureFilePath, int width, int height, Shader* shader,  float framesw, float framesh) : _width(width), _height(height)$/;"	f	class:Player
+Player	.\src\Player.h	/^class Player : public GameObject$/;"	c
 INPUTHANDLER_H	.\src\InputHandler.h	2;"	d
 Identify	.\tinyxml\tinyxmlparser.cpp	/^TiXmlNode* TiXmlNode::Identify( const char* p, TiXmlEncoding encoding )$/;"	f	class:TiXmlNode
 Indent	.\tinyxml\tinyxml.h	/^	const char* Indent()							{ return indent.c_str(); }$/;"	f	class:TiXmlPrinter
@@ -1048,11 +1048,11 @@ _details	.\tinyxml\docs\classTiXmlPrinter.html	/^<hr\/><a name="_details"><\/a><
 _details	.\tinyxml\docs\classTiXmlText.html	/^<hr\/><a name="_details"><\/a><h2>Detailed Description<\/h2>$/;"	a
 _details	.\tinyxml\docs\classTiXmlUnknown.html	/^<hr\/><a name="_details"><\/a><h2>Detailed Description<\/h2>$/;"	a
 _details	.\tinyxml\docs\classTiXmlVisitor.html	/^<hr\/><a name="_details"><\/a><h2>Detailed Description<\/h2>$/;"	a
-_ebo	.\src\Hero.h	/^  GLuint _ebo;$/;"	m	class:Hero
+_ebo	.\src\Player.h	/^  GLuint _ebo;$/;"	m	class:Player
 _format	.\src\Texture.h	/^  std::string _format;$/;"	m	class:Texture
 _glContext	.\src\GraphicsDevice.h	/^  SDL_GLContext _glContext;$/;"	m	class:GraphicsDevice
 _graphicsDevice	.\src\Game.h	/^  GraphicsDevice* _graphicsDevice;$/;"	m	class:Game
-_height	.\src\Hero.h	/^  unsigned int _height;$/;"	m	class:Hero
+_height	.\src\Player.h	/^  unsigned int _height;$/;"	m	class:Player
 _height	.\src\Texture.h	/^  int _height;$/;"	m	class:Texture
 _id	.\src\Shader.h	/^  GLuint _id;$/;"	m	class:Shader
 _id	.\src\Texture.h	/^  GLuint _id;$/;"	m	class:Texture
@@ -1081,10 +1081,10 @@ _swizzle_base1	.\glm\detail\_swizzle.hpp	/^	struct _swizzle_base1<3, T, P, vecTy
 _swizzle_base1	.\glm\detail\_swizzle.hpp	/^	struct _swizzle_base1<4, T, P, vecType, E0,E1,E2,E3, Aligned> : public _swizzle_base0<T, 4>$/;"	s	namespace:glm::detail
 _swizzle_base2	.\glm\detail\_swizzle.hpp	/^	struct _swizzle_base2 : public _swizzle_base1<N, T, P, vecType, E0,E1,E2,E3, detail::is_aligned<P>::value>$/;"	s	namespace:glm::detail
 _swizzle_base2	.\glm\detail\_swizzle.hpp	/^	struct _swizzle_base2<N, T, P, vecType, E0,E1,E2,E3, 1> : public _swizzle_base1<N, T, P, vecType, E0,E1,E2,E3, detail::is_aligned<P>::value>$/;"	s	namespace:glm::detail
-_vao	.\src\Hero.h	/^  GLuint _vao;$/;"	m	class:Hero
-_vbo	.\src\Hero.h	/^  GLuint _vbo;$/;"	m	class:Hero
+_vao	.\src\Player.h	/^  GLuint _vao;$/;"	m	class:Player
+_vbo	.\src\Player.h	/^  GLuint _vbo;$/;"	m	class:Player
 _vsync	.\src\GraphicsDevice.h	/^  bool _vsync;$/;"	m	class:GraphicsDevice
-_width	.\src\Hero.h	/^  unsigned int _width;$/;"	m	class:Hero
+_width	.\src\Player.h	/^  unsigned int _width;$/;"	m	class:Player
 _width	.\src\Texture.h	/^  int _width;$/;"	m	class:Texture
 _window	.\src\GraphicsDevice.h	/^  SDL_Window* _window;$/;"	m	class:GraphicsDevice
 _windowHeight	.\src\GraphicsDevice.h	/^  unsigned int _windowHeight;$/;"	m	class:GraphicsDevice
@@ -1428,7 +1428,7 @@ dquat	.\glm\fwd.hpp	/^	typedef mediump_dquat		dquat;$/;"	t	namespace:glm
 draw	.\backup\previous\Game.cpp	/^void Game::draw()$/;"	f	class:Game
 draw	.\src\Game.cpp	/^void Game::draw()$/;"	f	class:Game
 draw	.\src\GraphicEngine.cpp	/^void GraphicEngine::draw(GLuint vao, Shader* shader, GLuint first, GLuint count)$/;"	f	class:GraphicEngine
-draw	.\src\Hero.cpp	/^void Hero::draw()$/;"	f	class:Hero
+draw	.\src\Player.cpp	/^void Player::draw()$/;"	f	class:Player
 drawElements	.\src\GraphicEngine.cpp	/^void GraphicEngine::drawElements(GLuint vao, const Shader* shader, int count)$/;"	f	class:GraphicEngine
 dual	.\glm\gtx\dual_quaternion.hpp	/^		glm::tquat<T, P> real, dual;$/;"	m	struct:glm::tdualquat
 dualquat	.\glm\gtx\dual_quaternion.hpp	/^	typedef highp_fdualquat			dualquat;$/;"	t	namespace:glm
@@ -4662,7 +4662,7 @@ taylorInvSqrt	.\glm\detail\_noise.hpp	/^	GLM_FUNC_QUALIFIER tvec2<T, P> taylorIn
 taylorInvSqrt	.\glm\detail\_noise.hpp	/^	GLM_FUNC_QUALIFIER tvec3<T, P> taylorInvSqrt(tvec3<T, P> const & r)$/;"	f	namespace:glm::detail
 taylorInvSqrt	.\glm\detail\_noise.hpp	/^	GLM_FUNC_QUALIFIER tvec4<T, P> taylorInvSqrt(tvec4<T, P> const & r)$/;"	f	namespace:glm::detail
 tdualquat	.\glm\gtx\dual_quaternion.hpp	/^	struct tdualquat$/;"	s	namespace:glm
-texture	.\src\Hero.h	/^  Texture* texture;$/;"	m	class:Hero
+texture	.\src\Player.h	/^  Texture* texture;$/;"	m	class:Player
 tmat2x2	.\glm\detail\type_mat2x2.hpp	/^	struct tmat2x2$/;"	s	namespace:glm
 tmat2x3	.\glm\detail\type_mat2x3.hpp	/^	struct tmat2x3$/;"	s	namespace:glm
 tmat2x4	.\glm\detail\type_mat2x4.hpp	/^	struct tmat2x4$/;"	s	namespace:glm
@@ -4886,7 +4886,7 @@ umat4x4	.\glm\gtc\matrix_integer.hpp	/^	typedef mediump_umat4x4							umat4x4;$/
 uninitialize	.\glm\detail\setup.hpp	/^	enum ctor{uninitialize};$/;"	e	enum:glm::ctor
 update	.\backup\previous\Game.cpp	/^void Game::update()$/;"	f	class:Game
 update	.\src\Game.cpp	/^void Game::update()$/;"	f	class:Game
-update	.\src\Hero.cpp	/^void Hero::update(unsigned int gameTime)$/;"	f	class:Hero
+update	.\src\Player.cpp	/^void Player::update(unsigned int gameTime)$/;"	f	class:Player
 update	.\src\InputHandler.cpp	/^void InputHandler::update()$/;"	f	class:InputHandler
 use	.\src\Shader.cpp	/^void Shader::use()$/;"	f	class:Shader
 useMicrosoftBOM	.\tinyxml\tinyxml.h	/^	bool useMicrosoftBOM;		\/\/ the UTF-8 BOM were found when read. Note this, and try to write.$/;"	m	class:TiXmlDocument

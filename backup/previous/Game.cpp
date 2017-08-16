@@ -8,7 +8,7 @@
 #include "../glm/gtx/transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 #include "GraphicEngine.h"
-#include "Hero.h"
+#include "Player.h"
 #include <SDL2/SDL.h>
 
 #include <vector>
@@ -53,8 +53,8 @@ void Game::run()
 {
   Shader test("../shaders/vs.vs", "../shaders/fs.fs");
 
-  // Hero myhero = Hero("../resources/sprites/megaman.png", 100, 100, &test);
-  Hero myhero("../resources/sprites/megaman.png", 100, 100, &test);
+  // Player myplayer = Player("../resources/sprites/megaman.png", 100, 100, &test);
+  Player myplayer("../resources/sprites/megaman.png", 100, 100, &test);
 
   _graphicsDevice->checkForErrors();
   GLuint vao, vbo, ebo;

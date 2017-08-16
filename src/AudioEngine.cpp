@@ -47,7 +47,7 @@ int AudioEngine::loadWAV(const char* path, bool stereo, unsigned int format8or16
   ALenum error = alGetError();
   if(error != AL_NO_ERROR)
   {
-    printf("AUDIO ENGINE ERROR: OpenAL error: Could not load audio buffer. Error code: %i\n", error);
+    printf("AUDIO ENGINE ERROR: OpenAL error: Could not load audio buffer. Error code: %s\n", getErrorString(error).c_str());
     SDL_FreeWAV(wavBuffer);
     return -1;
   }
@@ -74,6 +74,18 @@ void AudioEngine::play(int source, int buffer)
   {
     alSourcei(_sources[source], AL_BUFFER, _buffers[buffer]);
     alSourcePlay(_sources[source]);
+  }
+}
+
+void AudioEngine::stop(int source)
+{
+  if(source < 0 || source > (_sources.size() - 1))
+  {
+    printf("AUDIO ENGINE ERROR: Invalid buffer.\n");
+  }
+  else
+  {
+    alSourceStop(_sources[source]);
   }
 }
 
@@ -116,6 +128,36 @@ int AudioEngine::createSource(float gain, float pitch, bool looping, float x, fl
   }
 }
 
+void AudioEngine::deleteSource(int source)
+{
+  if(source < 0 || source > (_sources.size() -1))
+  {
+    printf("AUDIO ENGINE ERROR: Unable to delete source: Invalid source.\n");
+  }
+  else
+  {
+    alDeleteSources(1, &_sources[source]);
+  }
+}
+
+void AudioEngine::deleteBuffer(int buffer)
+{
+  if(buffer < 0 || buffer > (_buffers.size() - 1))
+  {
+    printf("AUDIO ENGINE ERROR: Unable to delete buffer. Invalid buffer.\n");
+  }
+  else
+  {
+    alDeleteBuffers(1, &_buffers[buffer]);
+
+    ALenum error = alGetError();
+    if(error != AL_NO_ERROR)
+    {
+      printf("AUDIO ENGINE ERROR: Error while deleting buffer. Error: %s\n", getErrorString(error).c_str());
+    }
+  }
+}
+
 void AudioEngine::sourcePosition(int source, float x, float y, float z)
 {
   if(source < 0 || source > (_sources.size() -1 ))
@@ -128,13 +170,40 @@ void AudioEngine::sourcePosition(int source, float x, float y, float z)
   }
 }
 
+std::string AudioEngine::getErrorString(ALenum error)
+{
+  std::string errorString;
+  if(error == AL_INVALID_VALUE)
+  {
+    errorString = "AL_INVALID_VALUE";
+  }
+  else if(error == AL_OUT_OF_MEMORY)
+  {
+    errorString = "AL_OUT_OF_MEMORY";
+  }
+  else if(error == AL_INVALID_ENUM)
+  {
+    errorString = "AL_INVALID_ENUM";
+  }
+  else if(error == AL_INVALID_OPERATION)
+  {
+    errorString = "AL_INVALID_OPERATION";
+  }
+  else
+  {
+    errorString = "AUDIO ENGINE ERROR: getErrorString error: ALenum not registered.";
+  }
+
+  return errorString;
+}
+
 
 // Clean data
 void AudioEngine::clean()
 {
   for(std::vector<ALuint>::iterator it = _buffers.begin(); it != _buffers.end(); it++)
   {
-    alDeleteSources(1, &*it);
+    alDeleteBuffers(1, &*it);
   }
   _buffers.clear();
 

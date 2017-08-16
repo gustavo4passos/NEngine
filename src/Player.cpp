@@ -1,4 +1,4 @@
-#include "Hero.h"
+#include "Player.h"
 #include <vector>
 #include "Camera.h"
 #include "GraphicEngine.h"
@@ -6,12 +6,12 @@
 #include "PhysicsEngine.h"
 #include "World.h"
 
-Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, float speed,  Shader* shader, float framesx, float framesy)
+Player::Player(const char* textureFilePath, int x, int y, int width, int height, float speed, float framesx, float framesy)
 : _width(width), _height(height), _speed(speed), _framesx(framesx), _framesy(framesy), _position(Vector2D(x, y)), _velocity(Vector2D(0.f, 0.f)), _currentVelocity(0.f, 0.f)
 {
   _texture = new Texture(textureFilePath);
 
-  // If the width and height arguments are 0, set the dimensions of the hero to be the texture dimensions
+  // If the width and height arguments are 0, set the dimensions of the player to be the texture dimensions
   if(_width == 0 || _height == 0)
   {
     _width =  _texture->width();
@@ -43,8 +43,8 @@ Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, flo
   _vao = GraphicEngine::instance()->loadVao();
   _vbo = GraphicEngine::instance()->loadToVbo(vertices, sizeof(vertices));
 
-  shader->vertexAttribPointer("position", 2, 4, 0);
-  shader->vertexAttribPointer("texcoord", 2, 4, 2);
+  GraphicEngine::instance()->defaultShader()->vertexAttribPointer("position", 2, 4, 0);
+  GraphicEngine::instance()->defaultShader()->vertexAttribPointer("texcoord", 2, 4, 2);
 
   // Make the box smaller than the character (!!FIXME)
   int offsetx, offsety, widthReducer, heightReducer;
@@ -63,7 +63,7 @@ Hero::Hero(const char* textureFilePath, int x, int y, int width, int height, flo
 
 }
 
-void Hero::handleInput()
+void Player::handleInput()
 {
   if(InputHandler::instance()->keyDown(SDL_SCANCODE_LEFT))
   {
@@ -99,7 +99,7 @@ void Hero::handleInput()
   }
 }
 
-void Hero::animation(unsigned int gameTime)
+void Player::animation(unsigned int gameTime)
 {
     // Animate walk cycle if moving
     if(_velocity.length() > 0)
@@ -130,7 +130,7 @@ void Hero::animation(unsigned int gameTime)
     }
 }
 
-void Hero::move(unsigned int gameTime)
+void Player::move(unsigned int gameTime)
 {
   // Time difference between the current and previous frame
   unsigned int timeDifference = gameTime - _timeKeeper;
@@ -166,7 +166,7 @@ void Hero::move(unsigned int gameTime)
 }
 
 
-void Hero::update(unsigned int gameTime)
+void Player::update(unsigned int gameTime)
 {
   handleInput();
   animation(gameTime);
@@ -175,21 +175,20 @@ void Hero::update(unsigned int gameTime)
 }
 
 
-void Hero::draw()
+void Player::draw()
 {
+  GraphicEngine::instance()->useDefaultShader();
+  GraphicEngine::instance()->useOrtographicMatrix();
+  GraphicEngine::instance()->useCamera();
   GraphicEngine::instance()->drawFrame(_vao, _texture, &_position, _currentFramex, _currentFramey);
 }
 
-Hero::~Hero()
+Player::~Player()
 {
   delete _texture;
   _texture = NULL;
 
-  glBindVertexArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  glDeleteVertexArrays(1, &_vao);
-  glDeleteBuffers(1, &_vbo);
-  glDeleteBuffers(1, &_ebo);
+  GraphicEngine::instance()->deleteVbo(&_vbo);
+  GraphicEngine::instance()->deleteEbo(&_ebo);
+  GraphicEngine::instance()->deleteVao(&_vao);
 }

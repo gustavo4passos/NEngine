@@ -1,0 +1,10 @@
+<? xml version="1.0" ?>
+<DATA>
+  <HERO>
+    <data sprite="../resources/sprites/boy-pokemon-alike.png" x="100" y="400" width="90" height="114" speed="4.0" framesx="4" framesy="4"/>
+  </HERO>
+
+  <MAP>
+    <data file="seiken-densetsu.tmx"/>
+  </MAP>
+</DATA>

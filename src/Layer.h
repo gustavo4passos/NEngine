@@ -8,6 +8,7 @@ class Layer
 {
 public:
   Layer(unsigned width, unsigned height, const char* name, GLuint vao, GLuint vbo, GLuint ebo, unsigned indexCount);
+  ~Layer();
   void draw();
 
 private:

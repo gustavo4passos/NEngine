@@ -3051,17 +3051,17 @@ _windowWidth	C:\Library, Programming & Game Making\Projects\NEngine\src\Graphics
 _windowHeight	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.h	/^  unsigned int _windowHeight;$/;"	member	line:55	class:GraphicsDevice
 _isFullscreen	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.h	/^  bool _isFullscreen;$/;"	member	line:56	class:GraphicsDevice
 _vsync	C:\Library, Programming & Game Making\Projects\NEngine\src\GraphicsDevice.h	/^  bool _vsync;$/;"	member	line:57	class:GraphicsDevice
-Hero	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^Hero::Hero(const char* textureFilePath, int width, int height, Shader* shader,  float framesw, float framesh) : _width(width), _height(height)$/;"	function	line:3	class:Hero	signature:(const char* textureFilePath, int width, int height, Shader* shader, float framesw, float framesh)
-update	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^void Hero::update(unsigned int gameTime)$/;"	function	line:25	class:Hero	signature:(unsigned int gameTime)
-draw	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.cpp	/^void Hero::draw()$/;"	function	line:29	class:Hero	signature:()
-HERO_H	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^#define HERO_H$/;"	macro	line:2
-Hero	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^class Hero : public GameObject$/;"	class	line:10
-_width	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^  unsigned int _width;$/;"	member	line:18	class:Hero
-_height	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^  unsigned int _height;$/;"	member	line:19	class:Hero
-_vao	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^  GLuint _vao;$/;"	member	line:21	class:Hero
-_vbo	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^  GLuint _vbo;$/;"	member	line:22	class:Hero
-_ebo	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^  GLuint _ebo;$/;"	member	line:23	class:Hero
-texture	C:\Library, Programming & Game Making\Projects\NEngine\src\Hero.h	/^  Texture* texture;$/;"	member	line:24	class:Hero
+Player	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.cpp	/^Player::Player(const char* textureFilePath, int width, int height, Shader* shader,  float framesw, float framesh) : _width(width), _height(height)$/;"	function	line:3	class:Player	signature:(const char* textureFilePath, int width, int height, Shader* shader, float framesw, float framesh)
+update	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.cpp	/^void Player::update(unsigned int gameTime)$/;"	function	line:25	class:Player	signature:(unsigned int gameTime)
+draw	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.cpp	/^void Player::draw()$/;"	function	line:29	class:Player	signature:()
+HERO_H	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^#define HERO_H$/;"	macro	line:2
+Player	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^class Player : public GameObject$/;"	class	line:10
+_width	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^  unsigned int _width;$/;"	member	line:18	class:Player
+_height	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^  unsigned int _height;$/;"	member	line:19	class:Player
+_vao	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^  GLuint _vao;$/;"	member	line:21	class:Player
+_vbo	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^  GLuint _vbo;$/;"	member	line:22	class:Player
+_ebo	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^  GLuint _ebo;$/;"	member	line:23	class:Player
+texture	C:\Library, Programming & Game Making\Projects\NEngine\src\Player.h	/^  Texture* texture;$/;"	member	line:24	class:Player
 _instance	C:\Library, Programming & Game Making\Projects\NEngine\src\InputHandler.cpp	/^InputHandler* InputHandler::_instance = 0;$/;"	member	line:5	class:InputHandler	file:
 InputHandler	C:\Library, Programming & Game Making\Projects\NEngine\src\InputHandler.cpp	/^InputHandler::InputHandler()$/;"	function	line:7	class:InputHandler	signature:()
 ~InputHandler	C:\Library, Programming & Game Making\Projects\NEngine\src\InputHandler.cpp	/^InputHandler::~InputHandler()$/;"	function	line:19	class:InputHandler	signature:()

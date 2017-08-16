@@ -1,6 +1,6 @@
 #include "World.h"
 #include "GraphicEngine.h"
-#include "Hero.h"
+#include "Player.h"
 #include "Layer.h"
 #include "Loader.h"
 #include "PhysicsEngine.h"
@@ -15,7 +15,12 @@ World::World(Tileset* tileset, int width, int height, int tileWidth, int tileHei
 
 void World::draw()
 {
+  GraphicEngine::instance()->useStaticShader();
+  GraphicEngine::instance()->useOrtographicMatrix();
+  GraphicEngine::instance()->useCamera();
+
   _tileset->use();
+
   for(int i = 0; i < _layers.size(); i++)
   {
     _layers[i]->draw();
@@ -24,7 +29,11 @@ void World::draw()
 
 void World::drawOverlay()
 {
+  GraphicEngine::instance()->useStaticShader();
+  GraphicEngine::instance()->useOrtographicMatrix();
+  GraphicEngine::instance()->useCamera();
   _tileset->use();
+
   for(int i = 0; i < _overlayLayers.size(); i++)
   {
     _overlayLayers[i]->draw();
@@ -48,6 +57,9 @@ World::~World()
     delete *it;
     *it = NULL;
   }
+
+  _layers.clear();
+  _overlayLayers.clear();
 }
 
 void World::addLayer(Layer* layer)

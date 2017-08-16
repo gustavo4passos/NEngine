@@ -39,11 +39,7 @@ Background::~Background()
     delete _texture;
     _texture = NULL;
 
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    glDeleteVertexArrays(1, &_vao);
-    glDeleteBuffers(1, &_vbo);
-    glDeleteBuffers(1, &_ebo);
+    GraphicEngine::instance()->deleteVbo(&_vbo);
+    GraphicEngine::instance()->deleteEbo(&_ebo);
+    GraphicEngine::instance()->deleteVao(&_vao);
 }

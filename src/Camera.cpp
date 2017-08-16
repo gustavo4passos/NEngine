@@ -8,13 +8,20 @@ Camera::Camera() : _position(Vector2D(0.f, 0.f)), _velocity(Vector2D(0.f, 0.f)),
   _weightedAcceleration = 0.15f;
 }
 
-void Camera::setScreenLimits(int top, int right, int bottom, int left, float centerx, float centery)
+void Camera::setMapLimits(int top, int right, int bottom, int left)
 {
   _topLimit = top;
-  _rightLimit = right;
-  _bottomLimit = bottom;
+  _rightLimit = right - _screenWidth;
+  _bottomLimit = bottom - _screenHeight;
   _leftLimit = left;
-  _screenCenter = Vector2D(centerx, centery);
+}
+
+void Camera::focusAt(int x, int y, int objectWidth, int objectHeight)
+{
+  int newcenterx = (_screenWidth - objectWidth) / 2;
+  int newcentery = (_screenHeight - objectHeight) / 2;
+
+  _screenCenter = Vector2D(newcenterx, newcentery);
 }
 
 void Camera::followPosition(Vector2D position)
@@ -45,4 +52,6 @@ void Camera::update()
 
   _position.setX(-(_followPosition.x()));
   _position.setY(-(_followPosition.y()));
+
+  _transformationMatrix = glm::translate(glm::mat4(), glm::vec3(_position.x(), _position.y(), 0.f));
 }
