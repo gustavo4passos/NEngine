@@ -15,7 +15,7 @@ MapGameState::MapGameState(const char* loadFile)
 {
   _player = Loader::instance()->loadPlayer(loadFile);
   _world = Loader::instance()->loadWorld(loadFile);
-  _button = new Button("../resources/sprites/button-test.png", 200, 200, 300, 75, 2);
+  _button = new Button("../resources/sprites/button-test.png", 200, 200, 150, 75, 2);
 }
 
 void MapGameState::start()

@@ -4,8 +4,9 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-Button	C:\Library, Programming & Game Making\Projects\NEngine\src\Button.cpp	/^Button::Button(const char* sprite, int x, int y, int width, int height, int frames) : _position(float(x), float(y)), _width(width), _height(height)$/;"	function	line:5	class:Button	signature:(const char* sprite, int x, int y, int width, int height, int frames)
-~Button	C:\Library, Programming & Game Making\Projects\NEngine\src\Button.cpp	/^Button::~Button()$/;"	function	line:38	class:Button	signature:()
-handleInput	C:\Library, Programming & Game Making\Projects\NEngine\src\Button.cpp	/^void Button::handleInput()$/;"	function	line:44	class:Button	signature:()
-update	C:\Library, Programming & Game Making\Projects\NEngine\src\Button.cpp	/^void Button::update(unsigned int gameTime)$/;"	function	line:59	class:Button	signature:(unsigned int gameTime)
-draw	C:\Library, Programming & Game Making\Projects\NEngine\src\Button.cpp	/^void Button::draw()$/;"	function	line:64	class:Button	signature:()
+MapGameState	C:\Library, Programming & Game Making\Projects\NEngine\src\MapGameState.cpp	/^MapGameState::MapGameState(const char* loadFile)$/;"	function	line:14	class:MapGameState	signature:(const char* loadFile)
+start	C:\Library, Programming & Game Making\Projects\NEngine\src\MapGameState.cpp	/^void MapGameState::start()$/;"	function	line:21	class:MapGameState	signature:()
+end	C:\Library, Programming & Game Making\Projects\NEngine\src\MapGameState.cpp	/^void MapGameState::end()$/;"	function	line:32	class:MapGameState	signature:()
+handleInput	C:\Library, Programming & Game Making\Projects\NEngine\src\MapGameState.cpp	/^void MapGameState::handleInput()$/;"	function	line:45	class:MapGameState	signature:()
+update	C:\Library, Programming & Game Making\Projects\NEngine\src\MapGameState.cpp	/^void MapGameState::update(unsigned int gameTime)$/;"	function	line:50	class:MapGameState	signature:(unsigned int gameTime)
+draw	C:\Library, Programming & Game Making\Projects\NEngine\src\MapGameState.cpp	/^void MapGameState::draw()$/;"	function	line:58	class:MapGameState	signature:()
