@@ -16,6 +16,8 @@ GraphicEngine::GraphicEngine()
 
   // Load generic shaders
   _boxShader = new Shader("../shaders/boxshader.vs", "../shaders/boxshader.fs");
+  _defaultShader = new Shader("../shaders/sprite_render.vs", "../shaders/sprite_render.fs");
+  _staticShader = new Shader("../shaders/sprite_static.vs", "../shaders/sprite_static.fs");
 }
 
 void GraphicEngine::setUpOrtographicMatrix(GLfloat windowWidth, GLfloat windowHeight)
@@ -28,6 +30,11 @@ void GraphicEngine::setUpOrtographicMatrix(GLfloat windowWidth, GLfloat windowHe
 void GraphicEngine::useOrtographicMatrix()
 {
   _currentShader->setMat4("ortho", glm::value_ptr(ortho));
+}
+
+void GraphicEngine::useCamera()
+{
+  _currentShader->setMat4("camera", Camera::instance()->transformationMatrix());
 }
 
 void GraphicEngine::draw(GLuint vao, Texture* texture, GLuint first, GLuint count)
@@ -135,6 +142,16 @@ void GraphicEngine::useShader(Shader* shader)
   }
 }
 
+void GraphicEngine::useStaticShader()
+{
+  useShader(_staticShader);
+}
+
+void GraphicEngine::useDefaultShader()
+{
+  useShader(_defaultShader);
+}
+
 void GraphicEngine::useTexture(Texture* texture)
 {
   if(texture->id() != _currentTexture)
@@ -193,6 +210,32 @@ GLuint GraphicEngine::loadToEbo(GLuint data[], GLsizeiptr bytes)
 
   return ebo;
 }
+
+void GraphicEngine::deleteVao(GLuint* vao)
+{
+  glBindVertexArray(0);
+  glDeleteVertexArrays(1, vao);
+}
+
+void GraphicEngine::deleteVbo(GLuint* vbo)
+{
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, vbo);
+}
+
+void GraphicEngine::deleteEbo(GLuint* ebo)
+{
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, ebo);
+}
+
+void GraphicEngine::deleteTexture(GLuint* texture)
+{
+  // Unbind texture then delete it
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glDeleteTextures(1, texture);
+}
+
 
 // Draw a box in the screen
 // ATTENTION

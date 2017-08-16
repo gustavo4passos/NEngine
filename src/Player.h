@@ -15,7 +15,7 @@ public:
   // shader: necessary to link vao data
   // framesx: number of x frames in the texture
   // framesy: number of y frames in the texture
-  Player(const char* textureFilePath, int x, int y, int width, int height, float speed, Shader* shader, float framesx = 1, float framesy = 1);
+  Player(const char* textureFilePath, int x, int y, int width, int height, float speed, float framesx = 1, float framesy = 1);
   ~Player();
   virtual void update(unsigned int gameTime);
   virtual void draw();

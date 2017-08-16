@@ -77,6 +77,18 @@ void AudioEngine::play(int source, int buffer)
   }
 }
 
+void AudioEngine::stop(int source)
+{
+  if(source < 0 || source > (_sources.size() - 1))
+  {
+    printf("AUDIO ENGINE ERROR: Invalid buffer.\n");
+  }
+  else
+  {
+    alSourceStop(_sources[source]);
+  }
+}
+
 int AudioEngine::createSource(float gain, float pitch, bool looping, float x, float y, float z)
 {
   // Generate source
@@ -116,6 +128,30 @@ int AudioEngine::createSource(float gain, float pitch, bool looping, float x, fl
   }
 }
 
+void AudioEngine::deleteSource(int source)
+{
+  if(source < 0 || source > (_sources.size() -1))
+  {
+    printf("AUDIO ENGINE ERROR: Unable to delete source: Invalid source.\n");
+  }
+  else
+  {
+    alDeleteSources(1, &_sources[source]);
+  }
+}
+
+void AudioEngine::deleteBuffer(int buffer)
+{
+  if(buffer < 0 || buffer > (_buffers.size() - 1))
+  {
+    printf("AUDIO ENGINE ERROR: Unable to delete buffer. Invalid buffer.\n");
+  }
+  else
+  {
+    alDeleteBuffers(1, &_buffers[buffer]);
+  }
+}
+
 void AudioEngine::sourcePosition(int source, float x, float y, float z)
 {
   if(source < 0 || source > (_sources.size() -1 ))
@@ -134,7 +170,7 @@ void AudioEngine::clean()
 {
   for(std::vector<ALuint>::iterator it = _buffers.begin(); it != _buffers.end(); it++)
   {
-    alDeleteSources(1, &*it);
+    alDeleteBuffers(1, &*it);
   }
   _buffers.clear();
 

@@ -18,7 +18,7 @@ public:
   void vertexAttribPointer(const char* attribName, unsigned int size, unsigned int stride, unsigned int offset);
 
   // Loads different types of data into video memory
-  void setMat4(const char* uniformName, GLfloat* matrix) const;
+  void setMat4(const char* uniformName, const GLfloat* matrix) const;
   void setUniform1f(const char* uniformName, GLfloat data);
   void setUniform4f(const char* uniformName, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
   void setUniform2fv(const char* uniformName, GLfloat* data);

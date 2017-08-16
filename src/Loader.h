@@ -31,16 +31,16 @@ public:
   void loadConfig(const char* file, std::string elementName, std::vector<std::string> attributes, std::vector<int>* data);
 
   // Load a player object from a xml file
-  Player* loadPlayer(const char* file, Shader* shader);
+  Player* loadPlayer(const char* file);
 
   // Load a Background image from a xml file
   Background* loadBackground(const char* file, Shader* shader);
 
   // Load World
   Tileset* loadTileset(const char* tsxFile);
-  Layer* loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* shader);
+  Layer* loadLayer(TiXmlElement* layerElement, Tileset* tileset);
   void loadCollisionLayer(TiXmlElement* objectGroupElement, World* world);
-  World* loadWorld(const char* loadFile, Shader* shader);
+  World* loadWorld(const char* loadFile);
 
 private:
   static Loader* _instance;

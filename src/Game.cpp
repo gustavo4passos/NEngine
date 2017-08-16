@@ -5,6 +5,7 @@
 #include "AudioEngine.h"
 #include "Background.h"
 #include "GameState.h"
+#include "GameStateMachine.h"
 #include "MapGameState.h"
 #include "GraphicEngine.h"
 #include "Player.h"
@@ -25,6 +26,8 @@ Game::Game(const char* windowTitle, unsigned int windowWidth, unsigned int windo
   _graphicsDevice = new GraphicsDevice(windowTitle, windowWidth, windowHeight, glMajorVersion, glMinorVersion, fullscreen, vsync, transparency);
   _graphicsDevice->clearColor(0.f, 0.f, 0.f, 1.f);
   _audioDevice = new AudioDevice();
+  _gameStateMachine = new GameStateMachine();
+
   // Load orthographic matrix
   GraphicEngine::instance()->setUpOrtographicMatrix(_graphicsDevice->windowWidth(), _graphicsDevice->windowHeight());
   // Inform the camera about the screen resolution
@@ -33,8 +36,7 @@ Game::Game(const char* windowTitle, unsigned int windowWidth, unsigned int windo
   defaultShader = new Shader("../shaders/sprite_render.vs", "../shaders/sprite_render.fs");
   staticShader = new Shader("../shaders/sprite_static.vs", "../shaders/sprite_static.fs");
 
-  _gameState = new MapGameState("../data/loaddata.xml", defaultShader, staticShader );
-  _gameState->start();
+  _gameStateMachine->pushState(new MapGameState("../data/loaddata.xml"));
 }
 
 Game::~Game()
@@ -59,7 +61,7 @@ void Game::handleInput()
 
 void Game::update(unsigned int gameTime)
 {
-  _gameState->update(gameTime);
+  _gameStateMachine->update(gameTime);
 }
 
 void Game::draw()
@@ -67,7 +69,7 @@ void Game::draw()
   // Clear the color buffer
   _graphicsDevice->clear();
 
-  _gameState->draw();
+  _gameStateMachine->draw();
 
   _graphicsDevice->swap();
 }
@@ -87,12 +89,18 @@ void Game::run()
 
 void Game::close()
 {
-  _gameState->end();
-  delete _gameState;
-  _gameState = NULL;
+  _gameStateMachine->close();
 
+  // Close graphics device
   _graphicsDevice->checkForErrors();
   _graphicsDevice->close();
   delete _graphicsDevice;
   _graphicsDevice = NULL;
+
+  // Close audio device
+  AudioEngine::instance()->clean();
+  _audioDevice->checkForErrors();
+  _audioDevice->close();
+  delete _audioDevice;
+  _audioDevice = NULL;
 }

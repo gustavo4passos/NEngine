@@ -13,7 +13,7 @@ class World;
 class MapGameState : public GameState
 {
 public:
-  MapGameState(const char* loadFile, Shader* defaultShader, Shader* staticShader);
+  MapGameState(const char* loadFile);
   virtual void start();
   virtual void end();
 
@@ -23,11 +23,14 @@ public:
 private:
 
   // Draw shaders
-  Shader* _defaultShader;
   Shader* _staticShader;
 
   Player* _player;
   World* _world;
+
+  // Just for audio test purposes
+  int _audio;
+  int _source;
 };
 
 #endif

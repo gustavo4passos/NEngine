@@ -55,7 +55,7 @@ void Loader::loadConfig(const char* file, std::string elementName, std::vector<s
   }
 }
 
-Player* Loader::loadPlayer(const char* file, Shader* shader)
+Player* Loader::loadPlayer(const char* file)
 {
   TiXmlDocument doc(file);
   bool success = doc.LoadFile();
@@ -93,7 +93,7 @@ Player* Loader::loadPlayer(const char* file, Shader* shader)
     data->Attribute("framesy", &framesy);
 
     // Creates and return player based on data
-    Player* player = new Player(sprite, x, y, width, height, speed, shader, framesx, framesy);
+    Player* player = new Player(sprite, x, y, width, height, speed, framesx, framesy);
     return player;
   }
 }
@@ -175,7 +175,7 @@ Tileset* Loader::loadTileset(const char* tsxFile)
   }
 }
 
-Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* shader)
+Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset)
 {
   std::string layerName;
   int width;
@@ -273,8 +273,8 @@ Layer* Loader::loadLayer(TiXmlElement* layerElement, Tileset* tileset, Shader* s
   ebo = GraphicEngine::instance()->loadToEbo(&ebodata[0], sizeof(GLuint) * ebodata.size());
 
   // Enable vertex array attribs
-  shader->vertexAttribPointer("position", 2, 4, 0);
-  shader->vertexAttribPointer("texcoord", 2, 4, 2);
+  GraphicEngine::instance()->staticShader()->vertexAttribPointer("position", 2, 4, 0);
+  GraphicEngine::instance()->staticShader()->vertexAttribPointer("texcoord", 2, 4, 2);
 
   // Return freshly created layer
   Layer* layer = new Layer(width, height, layerName.c_str(), vao, vbo, ebo, ebodata.size());
@@ -297,7 +297,7 @@ void Loader::loadCollisionLayer(TiXmlElement* objectGroupElement, World* world)
   }
 }
 
-World* Loader::loadWorld(const char* loadFile, Shader* shader)
+World* Loader::loadWorld(const char* loadFile)
 {
 
   TiXmlDocument loadFileDoc(loadFile);
@@ -392,13 +392,13 @@ World* Loader::loadWorld(const char* loadFile, Shader* shader)
                 {
                   if(properties->Attribute("value") == std::string("overlay"))
                   {
-                    world->addOverlayLayer(loadLayer(e, tileset, shader));
+                    world->addOverlayLayer(loadLayer(e, tileset));
                   }
                 }
               }
               else
               {
-                world->addLayer(loadLayer(e, tileset, shader));
+                world->addLayer(loadLayer(e, tileset));
               }
             }
             else if(e->Value() == std::string("objectgroup"))

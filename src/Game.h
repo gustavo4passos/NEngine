@@ -10,6 +10,7 @@
 
 class Background;
 class GameState;
+class GameStateMachine;
 class Layer;
 class Player;
 class Shader;
@@ -41,14 +42,8 @@ private:
   Shader* defaultShader;
   Shader* staticShader;
 
-  // FIXME replace me with a gamestate machine
-  GameState* _gameState;
+  GameStateMachine* _gameStateMachine;
 
-  // Game characters
-  Player* _player;
-
-  // Game world
-  World* _world;
 
   bool _running;
 };

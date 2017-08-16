@@ -11,6 +11,7 @@ public:
   AudioDevice();
 
   bool initializationStatus() const { return _initializationStatus; }
+  void checkForErrors();
   void close();
 
 private:

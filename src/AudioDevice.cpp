@@ -5,7 +5,7 @@ AudioDevice::AudioDevice() : _audioDevice(NULL), _audioContext(NULL)
 {
   // Open the first audio device available
   _audioDevice = alcOpenDevice(NULL);
-  
+
   // Checks if the audio device was opened successfully
   if(!_audioDevice)
   {
@@ -51,4 +51,22 @@ AudioDevice::AudioDevice() : _audioDevice(NULL), _audioContext(NULL)
         }
     }
   }
+}
+
+void AudioDevice::checkForErrors()
+{
+  ALenum error = alcGetError(_audioDevice);
+  while(error != AL_NO_ERROR)
+  {
+    printf("AUDIO DEVICE ERROR (while checking for errors): %i\n", error);
+  }
+}
+
+void AudioDevice::close()
+{
+  alcDestroyContext(_audioContext);
+  alcCloseDevice(_audioDevice);
+
+  _audioContext = NULL;
+  _audioDevice = NULL;
 }

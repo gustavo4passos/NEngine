@@ -22,6 +22,7 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
   // Compile the vertex shader
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vertexShader);
+  
   // Check the compile status
   GLint vsCompileStatus;
   glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vsCompileStatus);
@@ -135,7 +136,7 @@ void Shader::setUniform2fv(const char* uniformName, GLfloat* data)
 }
 
 // Loads a 4x4 matris into the shader
-void Shader::setMat4(const char* uniformName, GLfloat* matrix) const
+void Shader::setMat4(const char* uniformName, const GLfloat* matrix) const
 {
   GLint uniformLocation = glGetUniformLocation(_id, uniformName);
 

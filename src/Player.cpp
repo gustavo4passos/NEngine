@@ -6,7 +6,7 @@
 #include "PhysicsEngine.h"
 #include "World.h"
 
-Player::Player(const char* textureFilePath, int x, int y, int width, int height, float speed,  Shader* shader, float framesx, float framesy)
+Player::Player(const char* textureFilePath, int x, int y, int width, int height, float speed, float framesx, float framesy)
 : _width(width), _height(height), _speed(speed), _framesx(framesx), _framesy(framesy), _position(Vector2D(x, y)), _velocity(Vector2D(0.f, 0.f)), _currentVelocity(0.f, 0.f)
 {
   _texture = new Texture(textureFilePath);
@@ -43,8 +43,8 @@ Player::Player(const char* textureFilePath, int x, int y, int width, int height,
   _vao = GraphicEngine::instance()->loadVao();
   _vbo = GraphicEngine::instance()->loadToVbo(vertices, sizeof(vertices));
 
-  shader->vertexAttribPointer("position", 2, 4, 0);
-  shader->vertexAttribPointer("texcoord", 2, 4, 2);
+  GraphicEngine::instance()->defaultShader()->vertexAttribPointer("position", 2, 4, 0);
+  GraphicEngine::instance()->defaultShader()->vertexAttribPointer("texcoord", 2, 4, 2);
 
   // Make the box smaller than the character (!!FIXME)
   int offsetx, offsety, widthReducer, heightReducer;
@@ -177,6 +177,9 @@ void Player::update(unsigned int gameTime)
 
 void Player::draw()
 {
+  GraphicEngine::instance()->useDefaultShader();
+  GraphicEngine::instance()->useOrtographicMatrix();
+  GraphicEngine::instance()->useCamera();
   GraphicEngine::instance()->drawFrame(_vao, _texture, &_position, _currentFramex, _currentFramey);
 }
 
@@ -185,11 +188,7 @@ Player::~Player()
   delete _texture;
   _texture = NULL;
 
-  glBindVertexArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  glDeleteVertexArrays(1, &_vao);
-  glDeleteBuffers(1, &_vbo);
-  glDeleteBuffers(1, &_ebo);
+  GraphicEngine::instance()->deleteVbo(&_vbo);
+  GraphicEngine::instance()->deleteEbo(&_ebo);
+  GraphicEngine::instance()->deleteVao(&_vao);
 }

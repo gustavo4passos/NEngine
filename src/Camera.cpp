@@ -52,4 +52,6 @@ void Camera::update()
 
   _position.setX(-(_followPosition.x()));
   _position.setY(-(_followPosition.y()));
+
+  _transformationMatrix = glm::translate(glm::mat4(), glm::vec3(_position.x(), _position.y(), 0.f));
 }
